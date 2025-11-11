@@ -1,11 +1,118 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "swiper/css";
+@import "swiper/css/pagination";
+@import "swiper/css/navigation";
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* =========================
+   NAV PANAH SWIPER (NO MASK)
+   ========================= */
+
+/* Style tombol panah kiri & kanan */
+.gear-prev,
+.gear-next {
+  @apply pointer-events-auto h-11 w-11 md:h-12 md:w-12
+         rounded-full bg-white text-emerald-900 shadow-lg
+         flex items-center justify-center border border-emerald-100
+         transition hover:bg-emerald-50 focus:outline-none
+         focus:ring-2 focus:ring-emerald-500/40;
+}
+
+/* Ukuran ikon SVG di dalam tombol panah */
+.gear-prev svg,
+.gear-next svg {
+  @apply w-5 h-5;
+}
+
+/* =========================
+   PAGINATION DOTS
+   ========================= */
+.gear-pagination .swiper-pagination-bullet {
+  @apply bg-emerald-300 opacity-100 w-2.5 h-2.5 mx-1;
+}
+.gear-pagination .swiper-pagination-bullet-active {
+  @apply bg-emerald-600;
+}
+
+/* =========================
+   KARTU SLIDER GEAR
+   ========================= */
+.gear-card {
+  @apply w-[calc(100%-7rem)] md:w-[calc(100%-8.5rem)];
+}
+
+/* =========================
+   HERO ENTRANCE ANIMATION (CINEMATIC)
+   ========================= */
+
+@keyframes heroEnterWow {
+  0% {
+    opacity: 0;
+    transform: translateY(80px) scale(0.9) rotateX(10deg);
+    filter: blur(6px);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(20px) scale(1.02) rotateX(0deg);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    filter: blur(0);
+  }
+}
+
+.animate-hero-enter {
+  animation: heroEnterWow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Sub-animasi bertahap untuk teks dan tombol */
+.animate-hero-enter .text-white p {
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.animate-hero-enter .text-white h1 {
+  animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+.animate-hero-enter .text-white a {
+  animation: fadeInUp 1s ease-out 0.8s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   HERO IMAGE FLOATING (IDLE & HOVER)
+   ========================= */
+
+.hero-float {
+  animation: floatIdle 5s ease-in-out infinite;
+  transition: transform 0.8s ease, filter 0.5s ease;
+  will-change: transform;
+}
+
+/* Efek melayang lembut saat idle */
+@keyframes floatIdle {
+  0%   { transform: translateY(0) scale(1); }
+  50%  { transform: translateY(-8px) scale(1.02); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+/* Efek mengambang "wow" saat hover */
+.hero-float:hover {
+  transform: translateY(-18px) scale(1.05) rotateZ(-1.5deg);
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.3));
 }

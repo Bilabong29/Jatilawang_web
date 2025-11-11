@@ -1,0 +1,204 @@
+@extends('layouts.public')
+
+@php use Illuminate\Support\Str; @endphp
+
+@section('title', 'Produk - Jatilawang Adventure')
+
+@section('content')
+<section class="bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    {{-- Breadcrumb & Toolbar --}}
+    <div class="flex items-center justify-between gap-4">
+      <nav class="text-sm text-gray-500">
+        <ol class="flex items-center gap-2">
+          <li>
+            <a href="/" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
+              {{-- back arrow --}}
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7 7-7M3 12h18"/></svg>
+              Home
+            </a>
+          </li>
+          <li class="mx-1">/</li>
+          <li class="font-medium text-gray-900">Produk</li>
+        </ol>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-gray-600">Produk Pilihan:</span>
+        <span class="text-sm font-semibold text-gray-900">85</span>
+
+        {{-- Sort --}}
+        <div class="relative">
+          <button type="button" class="inline-flex items-center justify-between gap-3 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
+            Berdasarkan Rating
+            <svg class="w-4 h-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.243 4.64a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {{-- SIDEBAR --}}
+      <aside class="lg:col-span-3">
+        <div class="rounded-xl border border-gray-200 p-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold text-gray-900">Produk</h3>
+            <button class="text-sm text-gray-500 hover:text-gray-700">^</button>
+          </div>
+
+          {{-- search in sidebar --}}
+          <div class="mt-3">
+            <div class="relative">
+              <input type="text" placeholder="Search"
+                     class="w-full rounded-lg border-gray-300 pr-10 focus:border-emerald-600 focus:ring-emerald-600">
+              <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.2-5.2M17 10A7 7 0 103 10a7 7 0 0014 0z"/></svg>
+            </div>
+          </div>
+
+          {{-- checklist --}}
+          <ul class="mt-4 space-y-2 text-sm">
+            <li class="flex items-center gap-2">
+              <input id="r1" type="checkbox" class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-600" checked>
+              <label for="r1" class="text-gray-700">Rekomendasi <span class="text-gray-400">110</span></label>
+            </li>
+            <li class="flex items-center gap-2">
+              <input id="r2" type="checkbox" class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-600">
+              <label for="r2" class="text-gray-700">Sepatu <span class="text-gray-400">125</span></label>
+            </li>
+            <li class="flex items-center gap-2">
+              <input id="r3" type="checkbox" class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-600">
+              <label for="r3" class="text-gray-700">Tenda <span class="text-gray-400">68</span></label>
+            </li>
+            <li class="flex items-center gap-2">
+              <input id="r4" type="checkbox" class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-600">
+              <label for="r4" class="text-gray-700">Jaket <span class="text-gray-400">44</span></label>
+            </li>
+            <li class="flex items-center gap-2">
+              <input id="r5" type="checkbox" class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-600">
+              <label for="r5" class="text-gray-700">Tas <span class="text-gray-400">36</span></label>
+            </li>
+            <li class="flex items-center gap-2">
+              <input id="r6" type="checkbox" class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-600">
+              <label for="r6" class="text-gray-700">Alat Perlengkapan <span class="text-gray-400">10</span></label>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+     {{-- GRID PRODUK --}}
+    <div class="lg:col-span-9">
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
+
+        @foreach ([
+        ['name'=>'Tenda Camping Antarestar (2 Orang)','price'=>'Rp35.000','img'=>'storage/foto-produk/tenda-camping.png','fav' => false],
+        ['name'=>'Tongkat Hiking Forclaz Decathlon','price'=>'Rp15.000','img'=>'storage/foto-produk/treking-pole.png','fav' => false],
+        ['name'=>'Sleeping Bag Bigadventure Bunaken','price'=>'Rp25.000','img'=>'storage/foto-produk/sleeping-bag-hijau.png' ,'fav' => true],
+        ['name'=>'Sandal Gunung Eiger Kinkajou','price'=>'Rp20.000','img'=>'storage/foto-produk/sandal-eiger.png', 'fav' => true],
+        ['name'=>'Kaos Kaki Eiger Kalahari','price'=>'Rp30.000','img'=>'storage/foto-produk/kaos-kaki-oren.png','fav' => false],
+        ['name'=>'Sepatu Gunung Eiger Anaconda 2.5','price'=>'Rp25.000','img'=>'storage/foto-produk/sepatu-eiger-plum.png','fav' => false],
+
+        ['name'=>'Botol Minum Eiger Selfoss','price'=>'Rp15.000','img'=>'storage/foto-produk/botol-minum-eiger.png','fav' => false],
+        ['name'=>'Headlamp Big Adventure','price'=>'Rp10.000','img'=>'storage/foto-produk/headlamp-bigadventure.png','fav' => false],
+        ['name'=>'Tas Gunung Streamline Eiger 40L','price'=>'Rp35.000','img'=>'storage/foto-produk/carrier-eiger-streamline.png','fav' => false],
+        ] as $p)
+
+        {{-- CARD PRODUK (disamakan dengan home) --}}
+        <div
+        class="group relative bg-white border border-gray-200 rounded-2xl shadow-sm
+                transition-all duration-300 ease-out overflow-hidden flex flex-col
+                will-change-transform
+
+                hover:-translate-y-1
+                hover:shadow-lg
+                hover:ring-2 hover:ring-emerald-600 hover:ring-offset-4 hover:ring-offset-white
+                hover:border-transparent
+        ">
+        {{-- Icon Love --}}
+        <div class="absolute top-4 right-4">
+            @if($p['fav'])
+                <button type="button"
+                    class="flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-red-500 shadow-sm ring-1 ring-gray-200 hover:text-red-600 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                                2 6.5 3.5 5 5.5 5
+                                c1.54 0 3.04.99 3.57 2.36h1.87
+                                C13.46 5.99 14.96 5 16.5 5
+                                18.5 5 20 6.5 20 8.5
+                                c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </button>
+            @else
+                <button type="button"
+                    class="flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-gray-400 shadow-sm ring-1 ring-gray-200 hover:text-red-500 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5
+                                -1.935 0-3.681 1.126-4.312 2.732
+                                -0.631-1.606-2.377-2.732-4.313-2.732
+                                -2.588 0-4.687 2.015-4.687 4.5
+                                0 7.22 9 11.25 9 11.25s9-4.03 9-11.25z"/>
+                    </svg>
+                </button>
+            @endif
+        </div>
+
+
+
+
+        {{-- Gambar produk --}}
+        <div class="relative w-full aspect-[4/3] grid place-items-center bg-white">
+            <img src="{{ asset($p['img']) }}" alt="{{ $p['name'] }}"
+                class="max-h-[180px] md:max-h-[220px] object-contain transition-transform duration-300 group-hover:scale-105">
+        </div>
+
+        {{-- Nama + Harga + Tombol --}}
+        <div class="p-5 flex flex-col flex-1 text-center font-sans">
+            {{-- Nama produk (max 2 baris) --}}
+            <h3 class="text-gray-800 font-medium text-[13px] md:text-[14px] leading-[1.35] mb-2
+                        line-clamp-2 min-h-[2.7rem]"
+                title="{{ $p['name'] }}"
+                style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                {{ $p['name'] }}
+            </h3>
+
+           {{--Harga --}}
+            <p class="text-emerald-800 font-extrabold text-[16px] md:text-[17px] mb-3">
+                {{ $p['price'] }}
+            </p>
+
+            {{-- Tombol --}}
+            <a href="{{ route('products.show', ['slug' => Str::slug($p['name'])]) }}"
+            class="mt-auto inline-block w-full bg-emerald-900 text-white font-semibold text-[13px] py-2.5 rounded-lg
+                    hover:bg-emerald-800 transition-all duration-200">
+                Lihat Detail
+            </a>
+        </div>
+        </div>
+        @endforeach
+
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-8 flex items-center justify-center gap-2 text-sm">
+        <button class="rounded-md border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-50">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        </button>
+        <button class="rounded-md border border-gray-300 px-3 py-1.5 bg-emerald-900 text-white">1</button>
+        <button class="rounded-md border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-50">2</button>
+        <button class="rounded-md border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-50">3</button>
+        <span class="px-2 text-gray-500">…</span>
+        <button class="rounded-md border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-50">12</button>
+        <button class="rounded-md border border-gray-300 px-3 py-1.5 text-gray-700 hover:bg-gray-50">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+        </button>
+    </div>
+    </div>
+
+</section>
+@endsection
