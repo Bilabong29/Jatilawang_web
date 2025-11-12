@@ -92,6 +92,7 @@
       </div>
     </div>
   </div>
+
 </section>
 
 {{-- ==== DETAILS CARD (full-width) ==== --}}
@@ -103,7 +104,7 @@
   $detailsIsLong = mb_strlen(trim($detailsRaw)) > $detailsThreshold;
   $detailsHtml = $detailsRaw ? nl2br(e($detailsRaw)) : 'Belum ada deskripsi.';
 @endphp
-<section class="bg-gray-50 py-12">
+<section class="bg-white py-12">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="details-card">
       <h2 id="details-title-{{ $detailsId }}" class="details-title">Details</h2>
@@ -171,4 +172,9 @@
 
 {{-- include related products --}}
 @include('products.partials.related', ['relatedProducts' => $relatedProducts ?? []])
+
+@if(empty($relatedProducts) || count($relatedProducts) === 0)
+  {{-- spacer to keep reviews away from footer when there are no related products --}}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16"></div>
+@endif
 @endsection
