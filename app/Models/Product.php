@@ -11,12 +11,19 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name','slug','description','price','image_url','stock'
+        'name',
+        'slug',
+        'description',
+        'price',
+        'image', // Diganti dari 'image_url' agar sesuai dengan home.blade.php
+        'stock',
+        'is_favorite', // Ditambahkan agar sesuai dengan home.blade.php
     ];
 
     protected $casts = [
         'price' => 'integer',
         'stock' => 'integer',
+        'is_favorite' => 'boolean', // Penting untuk mengontrol Icon Love di view
     ];
 
     // auto-generate slug jika belum diisi
@@ -24,21 +31,26 @@ class Product extends Model
     {
         static::creating(function ($product) {
             if (empty($product->slug)) {
-                $product->slug = Str::slug($product->name) . '-' . Str::random(6);
+                $product->slug = Str::slug($product->name);
+                // Menambahkan random string hanya jika slug sudah ada, 
+                // tapi kita buat sederhana dulu.
+            }
+        });
+        
+        // Memastikan slug diperbarui jika nama berubah
+        static::updating(function ($product) {
+            if ($product->isDirty('name')) {
+                 $product->slug = Str::slug($product->name);
             }
         });
     }
 
-    // opsional helper
+    // Helper untuk memformat harga (Dipanggil dengan $product->price_formatted)
     public function getPriceFormattedAttribute(): string
     {
         return 'Rp ' . number_format($this->price, 0, ',', '.');
     }
 
-    public function show(Product $product)
-    {
-    // $product otomatis terisi berdasarkan slug
-    return view('shop.show', compact('product'));
-    }
-
+    // CATATAN: Method 'show' harus berada di Controller, bukan di Model.
+    // Logic untuk menampilkan view dipindahkan ke ProductController.
 }
