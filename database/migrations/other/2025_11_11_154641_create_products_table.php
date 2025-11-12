@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             // Tambahkan baris ini:
             $table->string('slug')->unique();
-
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('stock');
