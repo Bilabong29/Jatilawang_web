@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
-        $this->call(ProductSeeder::class);
+        // Use items seeder (project uses `items` table)
+        $this->call(ItemsTableSeeder::class);
     }
 }
