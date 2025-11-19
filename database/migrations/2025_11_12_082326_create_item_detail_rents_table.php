@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('item_detail_rent', function (Blueprint $table) {
             $table->string('rent_detail_id', 10)->primary();
-            $table->unsignedSmallInteger('item_id');
+            $table->foreignId('item_id');
             $table->string('status', 20)->nullable();
             $table->text('note')->nullable();
             $table->unsignedBigInteger('current_rental_id')->nullable();

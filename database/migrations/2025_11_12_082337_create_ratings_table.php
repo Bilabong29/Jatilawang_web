@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->id('rating_id');
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
-            $table->unsignedSmallInteger('item_id');
-            $table->unsignedBigInteger('rental_id')->nullable();
-            $table->unsignedBigInteger('buy_id')->nullable();
+            $table->foreignId('item_id');
+            $table->foreignId('rental_id')->nullable();
+            $table->foreignId('buy_id')->nullable();
             $table->unsignedTinyInteger('rating_value')->comment('1 to 5');
             $table->text('comment')->nullable();
             $table->timestamp('created_at')->useCurrent();

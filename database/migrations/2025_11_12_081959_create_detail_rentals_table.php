@@ -16,7 +16,7 @@ return new class extends Migration
                   ->constrained('rentals', 'rental_id')
                   ->onDelete('cascade');
 
-            $table->unsignedSmallInteger('item_id');
+            $table->foreignId('item_id');
             $table->unsignedTinyInteger('quantity')->default(1);
             $table->decimal('penalty', 10, 2)->default(0);
             $table->timestamps();
