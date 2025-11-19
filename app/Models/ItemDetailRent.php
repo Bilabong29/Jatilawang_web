@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class ItemDetailRent extends Model
+
 {
     public $table = 'item_detail_rent';
     protected $primaryKey = 'rent_detail_id';
@@ -12,7 +13,11 @@ class ItemDetailRent extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'rent_detail_id', 'item_id', 'status', 'note', 'current_rental_id'
+        'rent_detail_id',
+        'item_id',
+        'status',
+        'note',
+        'current_rental_id'
     ];
 
     // Relasi

@@ -90,18 +90,60 @@
     <div class="lg:col-span-9">
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
 
-        @foreach ([
-        ['name'=>'Tenda Camping Antarestar (2 Orang)','price'=>'Rp35.000','img'=>'storage/foto-produk/tenda-camping.png','fav' => false],
-        ['name'=>'Tongkat Hiking Forclaz Decathlon','price'=>'Rp15.000','img'=>'storage/foto-produk/treking-pole.png','fav' => false],
-        ['name'=>'Sleeping Bag Bigadventure Bunaken','price'=>'Rp25.000','img'=>'storage/foto-produk/sleeping-bag-hijau.png' ,'fav' => true],
-        ['name'=>'Sandal Gunung Eiger Kinkajou','price'=>'Rp20.000','img'=>'storage/foto-produk/sandal-eiger.png', 'fav' => true],
-        ['name'=>'Kaos Kaki Eiger Kalahari','price'=>'Rp30.000','img'=>'storage/foto-produk/kaos-kaki-oren.png','fav' => false],
-        ['name'=>'Sepatu Gunung Eiger Anaconda 2.5','price'=>'Rp25.000','img'=>'storage/foto-produk/sepatu-eiger-plum.png','fav' => false],
+      @forelse ($items as $item)
+      {{-- CARD PRODUK --}}
+      <div
+      class="group relative bg-white border border-gray-200 rounded-2xl shadow-sm
+          transition-all duration-300 ease-out overflow-hidden flex flex-col
+          will-change-transform
+          hover:-translate-y-1
+          hover:shadow-lg
+          hover:ring-2 hover:ring-emerald-600 hover:ring-offset-4 hover:ring-offset-white
+          hover:border-transparent
+      ">
+      {{-- Icon Love (dummy, bisa diubah sesuai fitur favorit) --}}
+      <div class="absolute top-4 right-4">
+        <button type="button"
+          class="flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-gray-400 shadow-sm ring-1 ring-gray-200 hover:text-red-500 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+            viewBox="0 0 24 24" class="w-5 h-5">
+            <path d="M12 21C12 21 4 13.36 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.36 16 21 16 21H12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
 
-        ['name'=>'Botol Minum Eiger Selfoss','price'=>'Rp15.000','img'=>'storage/foto-produk/botol-minum-eiger.png','fav' => false],
-        ['name'=>'Headlamp Big Adventure','price'=>'Rp10.000','img'=>'storage/foto-produk/headlamp-bigadventure.png','fav' => false],
-        ['name'=>'Tas Gunung Streamline Eiger 40L','price'=>'Rp35.000','img'=>'storage/foto-produk/carrier-eiger-streamline.png','fav' => false],
-        ] as $p)
+      {{-- Gambar produk --}}
+      <div class="relative w-full aspect-[4/3] grid place-items-center bg-white">
+        <img src="{{ $item->url_image ?? asset('storage/foto-produk/default.png') }}" alt="{{ $item->item_name }}"
+          class="max-h-[180px] md:max-h-[220px] object-contain transition-transform duration-300 group-hover:scale-105">
+      </div>
+
+      {{-- Nama + Harga + Tombol --}}
+      <div class="p-5 flex flex-col flex-1 text-center font-sans">
+        {{-- Nama produk (max 2 baris) --}}
+        <h3 class="text-gray-800 font-medium text-[13px] md:text-[14px] leading-[1.35] mb-2
+              line-clamp-2 min-h-[2.7rem]"
+          title="{{ $item->item_name }}"
+          style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+          {{ $item->item_name }}
+        </h3>
+
+         {{--Harga --}}
+        <p class="text-emerald-800 font-extrabold text-[16px] md:text-[17px] mb-3">
+          Rp{{ number_format($item->rental_price_per_day ?? 0, 0, ',', '.') }}
+        </p>
+
+        {{-- Tombol detail pakai item_id --}}
+        <a href="{{ route('products.show', ['slug' => $item->item_id]) }}"
+        class="mt-auto inline-block w-full bg-emerald-900 text-white font-semibold text-[13px] py-2.5 rounded-lg
+            hover:bg-emerald-800 transition-all duration-200">
+          Lihat Detail
+        </a>
+      </div>
+      </div>
+      @empty
+        <div class="col-span-full text-center text-gray-500 py-12">Belum ada produk tersedia.</div>
+      @endforelse
 
         {{-- CARD PRODUK (disamakan dengan home) --}}
         <div

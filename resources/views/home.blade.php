@@ -222,85 +222,36 @@
 
             {{-- Grid Produk --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                @foreach ([
-                    ['name'=>'Sepatu Gunung Eiger Anaconda 2.5','price'=>'Rp25.000','img'=>'storage/foto-produk/sepatu-eiger-plum.png','fav'=>false],
-                    ['name'=>'Tenda Camping Antarestar (2 Orang)','price'=>'Rp35.000','img'=>'storage/foto-produk/tenda-camping.png','fav'=>false],
-                    ['name'=>'Jaket Gunung GorpCore Expedition Series Waterproof','price'=>'Rp25.000','img'=>'storage/foto-produk/jaket-hitam.png','fav'=>false],
-                    ['name'=>'Headlamp Big Adventure','price'=>'Rp10.000','img'=>'storage/foto-produk/headlamp-bigadventure.png','fav'=>false],
-                    ['name'=>'Tongkat Hiking Forclaz Decathlon','price'=>'Rp15.000','img'=>'storage/foto-produk/treking-pole.png','fav'=>false],
-                    ['name'=>'Carrier Eiger Streamline 45L','price'=>'Rp35.000','img'=>'storage/foto-produk/carrier-eiger-streamline.png','fav'=>true],
-                    ['name'=>'Sleeping Bag Bigadventure Bunaken','price'=>'Rp20.000','img'=>'storage/foto-produk/sleeping-bag-hijau.png','fav'=>false],
-                    ['name'=>'Celana Gunung Panjang Baffel Outdoor','price'=>'Rp20.000','img'=>'storage/foto-produk/celana-gunung.png','fav'=>false],
-                    ['name'=>'Botol Minum Eiger SELFOSS','price'=>'Rp15.000','img'=>'storage/foto-produk/botol-minum-eiger.png','fav'=>false],
-                    ['name'=>'Headlamp Antarestar LED COB','price'=>'Rp10.000','img'=>'storage/foto-produk/headlamp-antarestar.png','fav'=>false],
-                    ['name'=>'Sepatu Gunung Eiger Rubtrack','price'=>'Rp25.000','img'=>'storage/foto-produk/sepatu-gunung-rubtrack.png','fav'=>false],
-                    ['name'=>'Sepatu Gunung Eiger Teon','price'=>'Rp30.000','img'=>'storage/foto-produk/sepatu-gunung-teon.png','fav'=>false],
-                    ['name'=>'Sepatu Gunung Eiger Lynk','price'=>'Rp28.000','img'=>'storage/foto-produk/sepatu-gunung-lynk.png','fav'=>false],
-                    ['name'=>'Kaos Kaki Eiger Kalahari','price'=>'Rp8.000','img'=>'storage/foto-produk/kaos-kaki-oren.png','fav'=>false],
-                    ['name'=>'Sandal Gunung Eiger Kinkajou','price'=>'Rp18.000','img'=>'storage/foto-produk/sandal-eiger.png','fav'=>false],
-                    ['name'=>'Carrier Eiger Cosavior 50L','price'=>'Rp40.000','img'=>'storage/foto-produk/carrier-cosavior.png','fav'=>false],
-                ] as $p)
-
+                @forelse ($items as $item)
                     {{-- Card Produk --}}
-                    <div class="group relative bg-white border border-gray-200 rounded-2xl shadow-sm
-                                transition-all duration-300 ease-out overflow-hidden flex flex-col
-                                will-change-transform hover:-translate-y-1 hover:shadow-lg
-                                hover:ring-2 hover:ring-emerald-600 hover:ring-offset-4 hover:ring-offset-white
-                                hover:border-transparent">
-
-                        {{-- Gambar Produk --}}
-                        <div class="relative w-full aspect-[4/3] grid place-items-center bg-white overflow-hidden">
-                            <img src="{{ asset($p['img']) }}" alt="{{ $p['name'] }}"
-                                 class="max-h-[200px] md:max-h-[220px] object-contain transition-transform duration-300 group-hover:scale-105">
+                    <div class="group relative bg-white border border-gray-200 rounded-2xl shadow-sm transition-all duration-300 ease-out overflow-hidden flex flex-col will-change-transform hover:-translate-y-1 hover:shadow-lg hover:ring-2 hover:ring-emerald-600 hover:ring-offset-4 hover:ring-offset-white hover:border-transparent">
+                        <div class="absolute top-4 right-4">
+                            <button type="button" class="flex items-center justify-center w-9 h-9 rounded-full bg-white/90 text-gray-400 shadow-sm ring-1 ring-gray-200 hover:text-red-500 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                                    <path d="M12 21C12 21 4 13.36 4 8.5C4 5.42 6.42 3 9.5 3C11.24 3 12.91 3.81 14 5.08C15.09 3.81 16.76 3 18.5 3C21.58 3 24 5.42 24 8.5C24 13.36 16 21 16 21H12Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
                         </div>
-
-                        {{-- Nama + Harga + Tombol --}}
+                        <div class="relative w-full aspect-[4/3] grid place-items-center bg-white overflow-hidden">
+                            <img src="{{ $item->url_image ?? asset('storage/foto-produk/default.png') }}" alt="{{ $item->item_name }}" class="max-h-[200px] md:max-h-[220px] object-contain transition-transform duration-300 group-hover:scale-105">
+                        </div>
                         <div class="p-5 flex flex-col flex-1 text-center font-sans">
-                            <h3 class="text-gray-800 font-medium text-[13px] md:text-[14px] leading-[1.35] mb-2
-                                       line-clamp-2 min-h-[2.7rem]"
-                                title="{{ $p['name'] }}"
-                                style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-                                {{ $p['name'] }}
+                            <h3 class="text-gray-800 font-medium text-[13px] md:text-[14px] leading-[1.35] mb-2 line-clamp-2 min-h-[2.7rem]" title="{{ $item->item_name }}" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                                {{ $item->item_name }}
                             </h3>
-
                             <p class="text-emerald-800 font-extrabold text-[16px] md:text-[17px] mb-3">
-                                {{ $p['price'] }}
+                                Rp{{ number_format($item->rental_price_per_day ?? 0, 0, ',', '.') }}
                             </p>
-
-                            {{-- LINK KE DETAIL PRODUK --}}
-                            <a href="{{ route('products.show', Str::slug($p['name'])) }}"
-                               class="mt-auto inline-block w-full bg-emerald-900 text-white font-semibold text-[13px] py-2.5 rounded-lg
-                                      hover:bg-emerald-800 transition-all duration-200">
+                            <a href="{{ route('products.show', ['item_id' => $item->item_id]) }}" class="mt-auto inline-block w-full bg-emerald-900 text-white font-semibold text-[13px] py-2.5 rounded-lg hover:bg-emerald-800 transition-all duration-200">
                                 Lihat Detail
                             </a>
                         </div>
-
-                        {{-- Icon Love --}}
-                        <button class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
-                            @if($p['fav'])
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#ef4444" viewBox="0 0 24 24" class="w-6 h-6">
-                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
-                                            2 6.5 3.5 5 5.5 5
-                                            c1.54 0 3.04.99 3.57 2.36h1.87
-                                            C13.46 5.99 14.96 5 16.5 5
-                                            18.5 5 20 6.5 20 8.5
-                                            c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                                </svg>
-                            @else
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-                                     viewBox="0 0 24 24" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5
-                                             -1.935 0-3.681 1.126-4.312 2.732
-                                             -0.631-1.606-2.377-2.732-4.313-2.732
-                                             -2.588 0-4.687 2.015-4.687 4.5
-                                             0 7.22 9 11.25 9 11.25s9-4.03 9-11.25z"/>
-                                </svg>
-                            @endif
-                        </button>
-
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-span-full text-center text-gray-500 py-12">Belum ada produk tersedia.</div>
+                @endforelse
+
+                    
             </div>
         </div>
     </section>

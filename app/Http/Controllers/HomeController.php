@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product; // <-- Import Model Product
+use App\Models\Item; // Gunakan Item sebagai sumber katalog utama
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // Mengambil semua produk dari database
-        // Asumsi nama model adalah 'Product' dan sudah ada
-        $products = Product::all();
+        // Mengambil semua item dari database (sesuai ERD laporan)
+        $items = Item::all();
 
         return view('home', [
-            // Mengirim data produk ke view
-            'products' => $products,
+            // Kirim data item ke view home
+            'items' => $items,
         ]);
     }
 }
