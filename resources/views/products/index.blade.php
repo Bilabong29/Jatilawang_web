@@ -119,6 +119,12 @@
       </div>
 
       {{-- Nama + Harga + Tombol --}}
+      @php
+        $rawImage = $item->url_image;
+        $imageUrl = $rawImage
+        ? (Str::startsWith($rawImage, ['http://', 'https://']) ? $rawImage : asset($rawImage))
+        : asset('storage/foto-produk/default.png');
+      @endphp
       <div class="p-5 flex flex-col flex-1 text-center font-sans">
         {{-- Nama produk (max 2 baris) --}}
         <h3 class="text-gray-800 font-medium text-[13px] md:text-[14px] leading-[1.35] mb-2
@@ -140,15 +146,18 @@
           Lihat Detail
         </a>
 
-        {{-- Tombol Tambah ke Keranjang --}}
-        <form method="POST" action="{{ route('cart.store') }}" class="mt-2">
-          @csrf
-          <input type="hidden" name="item_id" value="{{ $item->item_id }}">
-          <button type="submit" class="mt-auto inline-block w-full bg-emerald-600 text-white font-semibold text-[13px] py-2.5 rounded-lg
-              hover:bg-emerald-500 transition-all duration-200">
-            Tambah ke Keranjang
-          </button>
-        </form>
+        {{-- Tombol Tambah ke Keranjang (langsung ke localStorage) --}}
+        <button type="button"
+          class="mt-2 inline-block w-full bg-emerald-600 text-white font-semibold text-[13px] py-2.5 rounded-lg
+          hover:bg-emerald-500 transition-all duration-200 add-to-cart"
+          data-id="{{ $item->item_id }}"
+          data-name="{{ $item->item_name }}"
+          data-price="{{ $item->rental_price_per_day ?? 0 }}"
+          data-image="{{ $imageUrl }}"
+          data-sku="{{ $item->item_code ?? $item->item_id }}"
+          data-quantity="1">
+          Tambah ke Keranjang
+        </button>
       </div>
       </div>
       @empty
