@@ -3,6 +3,11 @@
 @section('title', ($product['name'] ?? 'Product') . ' - Jatilawang Adventure')
 
 @section('content')
+@php
+    $productImage = $product['img_url'] ?? ($product['img'] ?? null
+        ? asset('storage/foto-produk/' . $product['img'])
+        : asset('storage/foto-produk/default.png'));
+@endphp
 <section class="bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -30,7 +35,7 @@
             {{-- Left: Large product image --}}
             <div class="flex items-center justify-center p-6 lg:p-12">
                 <div class="w-full max-w-[560px]">
-                    <img src="{{ $product['img_url'] ?? asset('storage/foto-produk/' . ($product['img'] ?? '')) }}" alt="{{ $product['name'] ?? '' }}" class="w-full h-auto object-contain">
+                    <img src="{{ $productImage }}" alt="{{ $product['name'] ?? '' }}" class="w-full h-auto object-contain">
                 </div>
             </div>
 
@@ -89,15 +94,17 @@
                         Favorit
                     </button>
 
-                    {{-- Form Tambah ke Keranjang --}}
-                    <form method="POST" action="{{ route('cart.store') }}" class="w-full sm:w-48">
-                        @csrf
-                        <input type="hidden" name="item_id" value="{{ $product['id'] ?? '' }}">
-                        <input type="hidden" name="qty" id="selectedQty" value="1">
-                        <button type="submit" class="w-full bg-emerald-900 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-emerald-800 transition">
+                      {{-- Tombol Tambah ke Keranjang --}}
+                      <button type="button"
+                          class="w-full sm:w-48 bg-emerald-900 text-white px-6 py-3 rounded-lg text-sm font-semibold hover:bg-emerald-800 transition add-to-cart"
+                          data-id="{{ $product['id'] ?? '' }}"
+                          data-name="{{ $product['name'] ?? '' }}"
+                          data-price="{{ $numericPrice ?? 0 }}"
+                          data-image="{{ $productImage }}"
+                          data-sku="{{ $product['sku'] ?? ($product['id'] ?? '') }}"
+                          data-quantity-target="#selectedQty">
                             Tambahkan ke Keranjang
-                        </button>
-                    </form>
+                      </button>
                 </div>
 
                 {{-- Stock badge (optional) --}}

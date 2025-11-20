@@ -166,6 +166,64 @@
           {{ $items->appends(request()->query())->links() }}
         </div>
       </div>
+<<<<<<< HEAD
+=======
+
+      {{-- Gambar produk --}}
+      <div class="relative w-full aspect-[4/3] grid place-items-center bg-white">
+        <img src="{{ $item->url_image ?? asset('storage/foto-produk/default.png') }}" alt="{{ $item->item_name }}"
+          class="max-h-[180px] md:max-h-[220px] object-contain transition-transform duration-300 group-hover:scale-105">
+      </div>
+
+      {{-- Nama + Harga + Tombol --}}
+      @php
+        $rawImage = $item->url_image;
+        $imageUrl = $rawImage
+        ? (Str::startsWith($rawImage, ['http://', 'https://']) ? $rawImage : asset($rawImage))
+        : asset('storage/foto-produk/default.png');
+      @endphp
+      <div class="p-5 flex flex-col flex-1 text-center font-sans">
+        {{-- Nama produk (max 2 baris) --}}
+        <h3 class="text-gray-800 font-medium text-[13px] md:text-[14px] leading-[1.35] mb-2
+              line-clamp-2 min-h-[2.7rem]"
+          title="{{ $item->item_name }}"
+          style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+          {{ $item->item_name }}
+        </h3>
+
+         {{--Harga --}}
+        <p class="text-emerald-800 font-extrabold text-[16px] md:text-[17px] mb-3">
+          Rp{{ number_format($item->rental_price_per_day ?? 0, 0, ',', '.') }}
+        </p>
+
+        {{-- Tombol detail pakai item_id --}}
+        <a href="{{ route('products.show', $item->item_id) }}"
+        class="mt-auto inline-block w-full bg-emerald-900 text-white font-semibold text-[13px] py-2.5 rounded-lg
+            hover:bg-emerald-800 transition-all duration-200">
+          Lihat Detail
+        </a>
+
+        {{-- Tombol Tambah ke Keranjang (langsung ke localStorage) --}}
+        <button type="button"
+          class="mt-2 inline-block w-full bg-emerald-600 text-white font-semibold text-[13px] py-2.5 rounded-lg
+          hover:bg-emerald-500 transition-all duration-200 add-to-cart"
+          data-id="{{ $item->item_id }}"
+          data-name="{{ $item->item_name }}"
+          data-price="{{ $item->rental_price_per_day ?? 0 }}"
+          data-image="{{ $imageUrl }}"
+          data-sku="{{ $item->item_code ?? $item->item_id }}"
+          data-quantity="1">
+          Tambah ke Keranjang
+        </button>
+      </div>
+      </div>
+      @empty
+        <div class="col-span-full text-center text-gray-500 py-12">Belum ada produk tersedia.</div>
+      @endforelse
+
+        {{-- end demo card removed (was using undefined $p) --}}
+
+>>>>>>> origin/Briflyy
     </div>
   </div>
 </section>
