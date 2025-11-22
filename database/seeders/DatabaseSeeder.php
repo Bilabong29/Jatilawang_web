@@ -23,5 +23,8 @@ class DatabaseSeeder extends Seeder
         ]);
         // Use items seeder (project uses `items` table)
         $this->call(ItemsTableSeeder::class);
+
+        $this->call(AdminUserSeeder::class);
+
     }
 }
