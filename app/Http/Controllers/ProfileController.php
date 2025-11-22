@@ -2,59 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function edit()
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = Auth::user();
+        return view('profile.edit', compact('user'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function verify(Request $request)
     {
-        $request->user()->fill($request->validated());
+        $request->validate([
+            'password' => 'required'
+        ]);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = Auth::user();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'Kata sandi tidak valid']);
         }
 
-        $request->user()->save();
+        // Set session untuk izinkan edit
+        session(['profile_edit_allowed' => true]);
+        
+        // Debug: log session
+        \Log::info('Profile edit allowed - Session set for user: ' . $user->user_id);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Redirect ke form edit - PASTIKAN route name benar
+        return redirect()->route('profile.edit.form');
     }
 
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function showEditForm()
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        \Log::info('Accessing showEditForm - Session data:', session()->all());
+        
+        if (!session('profile_edit_allowed')) {
+            \Log::warning('Profile edit not allowed - redirecting to profile.edit');
+            return redirect()->route('profile.edit')->withErrors(['password' => 'Silakan verifikasi kata sandi terlebih dahulu']);
+        }
+
+        $user = Auth::user();
+        \Log::info('Showing edit form for user: ' . $user->user_id);
+        return view('profile.update', compact('user'));
+    }
+
+    public function update(Request $request)
+    {
+        if (!session('profile_edit_allowed')) {
+            return redirect()->route('profile.edit')->withErrors(['password' => 'Sesi edit telah berakhir. Silakan verifikasi ulang.']);
+        }
+
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'username' => 'required|string|max:50|unique:users,username,' . $user->user_id . ',user_id',
+            'email' => 'nullable|email|max:100',
+            'full_name' => 'nullable|string|max:100',
+            'phone_number' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
         ]);
 
-        $user = $request->user();
+        $user->update($validated);
 
-        Auth::logout();
+        // Clear session setelah update berhasil
+        session()->forget('profile_edit_allowed');
 
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return redirect()->route('profile.edit')->with('success', 'Profil berhasil diperbarui!');
     }
 }

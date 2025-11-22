@@ -45,7 +45,7 @@
         </div>
     </section>
 
-    {{-- ====== GEAR SLIDER (tetap sama) ====== --}}
+    {{-- ====== GEAR SLIDER ====== --}}
     <section class="mt-16 md:mt-24">
         <div class="mx-auto max-w-7xl px-6">
             <p class="text-sm text-emerald-700/70 mb-2">Koleksi Favorit Pendaki</p>
@@ -81,7 +81,7 @@
                                 <p class="mt-3 text-emerald-900/70 text-lg">
                                     Ringkas, kuat, mudah dipasang…
                                 </p>
-                                <a href="{{ route('products.index') }}"
+                                <a href="{{ route('products.index', ['categories' => ['Tenda']]) }}"
                                    class="inline-flex items-center gap-2 mt-6 rounded-xl border border-emerald-200
                                           bg-white px-5 py-3 text-emerald-900 hover:bg-emerald-50 transition">
                                     Lihat Koleksi
@@ -110,7 +110,7 @@
                                 <p class="mt-3 text-emerald-900/70 text-lg">
                                     Melindungi dari angin & hujan…
                                 </p>
-                                <a href="{{ route('products.index') }}"
+                                <a href="{{ route('products.index', ['categories[]' => 'Jaket']) }}"
                                    class="inline-flex items-center gap-2 mt-6 rounded-xl border border-emerald-200
                                           bg-white px-5 py-3 text-emerald-900 hover:bg-emerald-50 transition">
                                     Lihat Koleksi
@@ -139,7 +139,7 @@
                                 <p class="mt-3 text-emerald-900/70 text-lg">
                                     Material ergonomis & kuat, perlengkapanmu tetap terorganisir.
                                 </p>
-                                <a href="{{ route('products.index') }}"
+                                <a href="{{ route('products.index', ['categories[]' => 'Tas']) }}"
                                    class="inline-flex items-center gap-2 mt-6 rounded-xl border border-emerald-200
                                           bg-white px-5 py-3 text-emerald-900 hover:bg-emerald-50 transition">
                                     Lihat Koleksi

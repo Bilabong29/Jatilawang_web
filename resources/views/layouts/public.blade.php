@@ -48,10 +48,11 @@
         $nav = [
             ['label'=>'Beranda','href'=>url('/'), 'active'=>request()->routeIs('home')],
             ['label' => 'Produk',   'href' => route('products.index'), 'active' => request()->routeIs('products.*')],
+            ['label'=>'Tentang Kami','href'=>route('tentang-kami'), 'active' => request()->routeIs('tentang-kami')],
             ['label'=>'Kontak','href'=>route('kontak') , 'active' => request()->routeIs('kontak')],
         ];
         @endphp
-        <nav class="hidden lg:flex items-center gap-8">
+        <nav class="hidden lg:flex items-center gap-7">
         @foreach ($nav as $item)
             <a href="{{ $item['href'] }}"
             class="{{ $item['active'] ? 'text-gray-900 font-semibold' : 'text-gray-400 hover:text-gray-900' }}">
@@ -90,13 +91,73 @@
 @endauth
 
         {{-- Account --}}
-        <a href="{{ auth()->check() ? route('home') : route('login') }}"
-            class="text-gray-900 hover:opacity-80" aria-label="Account">
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0H5z"/>
-            </svg>
-        </a>
+        <div class="relative">
+            @auth
+                {{-- Sudah Login: Icon Fill Hijau + Dropdown Indicator --}}
+                <button type="button" id="user-menu-button" class="flex items-center gap-1 text-emerald-600 hover:text-emerald-700 transition focus:outline-none group">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0H5z"/>
+                    </svg>
+                    {{-- Chevron Icon --}}
+                    <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+
+                {{-- Dropdown Menu --}}
+                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    {{-- Header Profil --}}
+                    <div class="px-4 py-3 border-b border-gray-100">
+                        <p class="text-sm font-semibold text-gray-900">{{ auth()->user()->username ?? '' }}</p>
+                        <p class="text-sm text-gray-500 truncate">{{ auth()->user()->email ?? '' }}</p>
+                    </div>
+                    
+                    {{-- Menu Items --}}
+                    <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        Profil Saya
+                    </a>
+                    
+                    <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        Ubah Kata Sandi
+                    </a>
+                    
+                    <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        Riwayat Pesanan
+                    </a>
+                    
+                    {{-- Separator --}}
+                    <div class="border-t border-gray-100 my-1"></div>
+                    
+                    {{-- Logout --}}
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            Keluar
+                        </button>
+                    </form>
+                </div>
+            @else
+                {{-- Belum Login: Icon Outline tanpa dropdown indicator --}}
+                <a href="{{ route('login') }}" class="text-gray-900 hover:opacity-80 transition" aria-label="Login">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0H5z"/>
+                    </svg>
+                </a>
+            @endauth
+        </div>
         </div>
     </div>
     </header>
@@ -106,6 +167,47 @@
     </main>
 
     @include('components.footer')
+
+    <!-- Script untuk toggle dropdown -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            const chevron = userMenuButton?.querySelector('svg:last-child');
+
+            if (userMenuButton && userDropdown) {
+                // Toggle dropdown ketika ikon diklik
+                userMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isHidden = userDropdown.classList.toggle('hidden');
+                    
+                    // Rotate chevron berdasarkan state dropdown
+                    if (chevron) {
+                        if (isHidden) {
+                            chevron.style.transform = 'rotate(0deg)';
+                        } else {
+                            chevron.style.transform = 'rotate(180deg)';
+                        }
+                    }
+                });
+
+                // Tutup dropdown ketika klik di luar
+                document.addEventListener('click', function(e) {
+                    if (!userDropdown.contains(e.target) && !userMenuButton.contains(e.target)) {
+                        userDropdown.classList.add('hidden');
+                        if (chevron) {
+                            chevron.style.transform = 'rotate(0deg)';
+                        }
+                    }
+                });
+
+                // Prevent dropdown tertutup ketika klik di dalam dropdown
+                userDropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+        });
+    </script>
 
     <!-- Script keranjang frontend -->
     <script>
@@ -222,16 +324,5 @@
             window.location.href = "{{ route('login') }}?redirect=" + encodeURIComponent(redirectTo);
         }
     </script>
-
-    {{-- KALAU MAU SETELAH LOGIN OTOMATIS BALIK KE KERANJANG, TAMBAHKAN INI DI LoginController (method authenticated) --}}
-    {{-- 
-    protected function authenticated(Request $request, $user)
-    {
-        if ($request->has('redirect')) {
-            return redirect($request->get('redirect'));
-        }
-        return redirect()->intended(route('home'));
-    }
-    --}}
 </body>
 </html>
