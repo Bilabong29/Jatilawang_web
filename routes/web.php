@@ -35,12 +35,13 @@ Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart
 // OAuth (placeholder)
 Route::get('/auth/redirect/{provider}', fn () => abort(501))->name('social.redirect');
 
+
 // Footer
-Route::view('/cara-sewa', 'cara-sewa')->name('cara-sewa');
-Route::view('/cara-pengembalian', 'cara-pengembalian')->name('cara-pengembalian');
-Route::view('/tentang-kami', 'tentang-kami')->name('tentang-kami');
-Route::view('/syarat-ketentuan', 's&k')->name('syarat-ketentuan');
-Route::view('/kontak', 'kontak')->name('kontak');
+Route::view('/cara-sewa', 'public.cara-sewa')->name('cara-sewa');
+Route::view('/cara-pengembalian', 'public.cara-pengembalian')->name('cara-pengembalian');
+Route::view('/tentang-kami', 'public.tentang-kami')->name('tentang-kami');
+Route::view('/syarat-ketentuan', 'public.s&k')->name('syarat-ketentuan');
+Route::view('/kontak', 'public.kontak')->name('kontak');
 
 
 /**
@@ -54,10 +55,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 
-    // Profil
+    // routes/web.php
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/verify', [ProfileController::class, 'verify'])->name('profile.verify');
+    Route::get('/profile/edit-form', [ProfileController::class, 'showEditForm'])->name('profile.edit.form');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 

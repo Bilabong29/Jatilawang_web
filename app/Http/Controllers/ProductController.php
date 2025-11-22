@@ -9,7 +9,9 @@ class ProductController extends Controller
 {
     // ================== HOMEPAGE (3 TAB PRODUK) ==================
 public function home()
-{
+{   
+       // Untuk debugging - lihat kategori yang ada
+    $categories = Item::distinct()->pluck('category');
     // 1. Terbaru — 8 produk terbaru
     $latest = Item::latest()->take(8)->get();
 
