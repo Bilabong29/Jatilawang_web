@@ -4,80 +4,227 @@
 @section('header', 'Tambah Produk')
 
 @section('content')
-    <form method="POST" action="{{ route('admin.items.store') }}" class="bg-white p-4 rounded shadow max-w-xl">
-        @csrf
+    <div class="max-w-2xl">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <h3 class="font-semibold text-lg text-slate-800 mb-1">
+                Tambah Produk Baru
+            </h3>
+            <p class="text-sm text-gray-600 mb-4">
+                Lengkapi informasi produk untuk disimpan ke katalog penyewaan dan penjualan.
+            </p>
 
-        <div class="mb-3">
-            <label class="block mb-1">ID Produk (item_id)</label>
-            <input type="number" name="item_id" value="{{ old('item_id') }}" class="border rounded w-full px-2 py-1">
-            @error('item_id') <div class="text-red-500 text-xs">{{ $message }}</div> @enderror
+            <form method="POST" action="{{ route('admin.items.store') }}" class="space-y-4">
+                @csrf
+
+                {{-- Baris: ID Produk --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        ID Produk (item_id)
+                    </label>
+                    <input
+                        type="number"
+                        name="item_id"
+                        value="{{ old('item_id') }}"
+                        class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                               focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Contoh: 101"
+                    >
+                    <p class="text-[11px] text-gray-400 mt-1">
+                        ID unik untuk produk. Pastikan tidak sama dengan produk lain.
+                    </p>
+                    @error('item_id')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Baris: Nama + Kategori --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            Nama Produk
+                        </label>
+                        <input
+                            type="text"
+                            name="item_name"
+                            value="{{ old('item_name') }}"
+                            class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Contoh: Tenda Dome 4 Orang"
+                        >
+                        @error('item_name')
+                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            Kategori
+                        </label>
+                        <input
+                            type="text"
+                            name="category"
+                            value="{{ old('category') }}"
+                            class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Contoh: Tenda, Carrier, Sepatu"
+                        >
+                        @error('category')
+                            <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Baris: URL Gambar --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        URL Gambar
+                    </label>
+                    <input
+                        type="url"
+                        name="url_image"
+                        value="{{ old('url_image') }}"
+                        class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                               focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Tempel link gambar (CDN / hosting lain)"
+                    >
+                    <p class="text-[11px] text-gray-400 mt-1">
+                        Gunakan link gambar untuk menghemat penyimpanan server.
+                    </p>
+                    @error('url_image')
+                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Baris: Harga --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            Harga Sewa / Hari
+                        </label>
+                        <input
+                            type="number"
+                            name="rental_price_per_day"
+                            value="{{ old('rental_price_per_day') }}"
+                            class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Contoh: 25000"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            Harga Jual
+                        </label>
+                        <input
+                            type="number"
+                            name="sale_price"
+                            value="{{ old('sale_price') }}"
+                            class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Contoh: 450000"
+                        >
+                    </div>
+                </div>
+
+                {{-- Baris: Stok --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            Stok Sewa
+                        </label>
+                        <input
+                            type="number"
+                            name="rental_stock"
+                            value="{{ old('rental_stock', 0) }}"
+                            class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">
+                            Stok Jual
+                        </label>
+                        <input
+                            type="number"
+                            name="sale_stock"
+                            value="{{ old('sale_stock', 0) }}"
+                            class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                                   focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                    </div>
+                </div>
+
+                {{-- Baris: Denda --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Denda per Hari
+                    </label>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="penalty_per_days"
+                        value="{{ old('penalty_per_days', 0) }}"
+                        class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                               focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Contoh: 10000"
+                    >
+                    <p class="text-[11px] text-gray-400 mt-1">
+                        Denda keterlambatan pengembalian per hari.
+                    </p>
+                </div>
+
+                {{-- Baris: Status sewa/jual --}}
+                <div class="flex flex-wrap items-center gap-4">
+                    <label class="inline-flex items-center text-sm text-slate-700">
+                        <input type="hidden" name="is_rentable" value="0">
+                        <input
+                            type="checkbox"
+                            name="is_rentable"
+                            value="1"
+                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            {{ old('is_rentable', 1) ? 'checked' : '' }}
+                        >
+                        <span class="ml-2">Bisa disewa</span>
+                    </label>
+
+                    <label class="inline-flex items-center text-sm text-slate-700">
+                        <input type="hidden" name="is_sellable" value="0">
+                        <input
+                            type="checkbox"
+                            name="is_sellable"
+                            value="1"
+                            class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            {{ old('is_sellable', 1) ? 'checked' : '' }}
+                        >
+                        <span class="ml-2">Bisa dijual</span>
+                    </label>
+                </div>
+
+                {{-- Baris: Deskripsi --}}
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">
+                        Deskripsi
+                    </label>
+                    <textarea
+                        name="description"
+                        rows="3"
+                        class="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm
+                               focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="Tuliskan detail produk, material, kegunaan, dan lain-lain...">{{ old('description') }}</textarea>
+                </div>
+
+                {{-- Tombol aksi --}}
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <a href="{{ route('admin.items.index') }}"
+                       class="text-sm text-gray-600 hover:underline">
+                        Batal
+                    </a>
+                    <button
+                        class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-xl
+                               bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm">
+                        Simpan Produk
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <div class="mb-3">
-            <label class="block mb-1">Nama Produk</label>
-            <input type="text" name="item_name" value="{{ old('item_name') }}" class="border rounded w-full px-2 py-1">
-            @error('item_name') <div class="text-red-500 text-xs">{{ $message }}</div> @enderror
-        </div>
-
-        <div class="mb-3">
-            <label class="block mb-1">Kategori</label>
-            <input type="text" name="category" value="{{ old('category') }}" class="border rounded w-full px-2 py-1">
-            @error('category') <div class="text-red-500 text-xs">{{ $message }}</div> @enderror
-        </div>
-
-        <div class="mb-3">
-            <label class="block mb-1">URL Gambar</label>
-            <input type="url" name="url_image" value="{{ old('url_image') }}" class="border rounded w-full px-2 py-1">
-            @error('url_image') <div class="text-red-500 text-xs">{{ $message }}</div> @enderror
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mb-3">
-            <div>
-                <label class="block mb-1">Harga Sewa / Hari</label>
-                <input type="number" name="rental_price_per_day" value="{{ old('rental_price_per_day') }}" class="border rounded w-full px-2 py-1">
-            </div>
-            <div>
-                <label class="block mb-1">Harga Jual</label>
-                <input type="number" name="sale_price" value="{{ old('sale_price') }}" class="border rounded w-full px-2 py-1">
-            </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 mb-3">
-            <div>
-                <label class="block mb-1">Stok Sewa</label>
-                <input type="number" name="rental_stock" value="{{ old('rental_stock', 0) }}" class="border rounded w-full px-2 py-1">
-            </div>
-            <div>
-                <label class="block mb-1">Stok Jual</label>
-                <input type="number" name="sale_stock" value="{{ old('sale_stock', 0) }}" class="border rounded w-full px-2 py-1">
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <label class="block mb-1">Denda per Hari</label>
-            <input type="number" step="0.01" name="penalty_per_days" value="{{ old('penalty_per_days', 0) }}" class="border rounded w-full px-2 py-1">
-        </div>
-
-        <div class="mb-3 flex items-center gap-4">
-            <label class="inline-flex items-center">
-                <input type="hidden" name="is_rentable" value="0">
-                <input type="checkbox" name="is_rentable" value="1" {{ old('is_rentable', 1) ? 'checked' : '' }}>
-                <span class="ml-2">Bisa disewa</span>
-            </label>
-
-            <label class="inline-flex items-center">
-                <input type="hidden" name="is_sellable" value="0">
-                <input type="checkbox" name="is_sellable" value="1" {{ old('is_sellable', 1) ? 'checked' : '' }}>
-                <span class="ml-2">Bisa dijual</span>
-            </label>
-        </div>
-
-        <div class="mb-3">
-            <label class="block mb-1">Deskripsi</label>
-            <textarea name="description" rows="3" class="border rounded w-full px-2 py-1">{{ old('description') }}</textarea>
-        </div>
-
-        <button class="px-4 py-2 bg-blue-500 text-white rounded">Simpan</button>
-    </form>
+    </div>
 @endsection
-    

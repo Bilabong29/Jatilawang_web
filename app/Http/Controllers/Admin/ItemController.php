@@ -8,19 +8,47 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
+
     public function index(Request $request)
     {
         $query = Item::query();
 
         if ($search = $request->get('q')) {
-            $query->where('item_name', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('item_name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+            });
         }
 
         if ($category = $request->get('category')) {
-            $query->where('category', $category);
+            $query->where('category', 'like', "%{$category}%");
         }
 
-        $items = $query->orderBy('item_name')->paginate(20);
+        $sort = $request->get('sort', 'latest');
+
+        switch ($sort) {
+            case 'price_low':
+                $query->orderByRaw('COALESCE(rental_price_per_day, 999999999) ASC');
+                break;
+            case 'price_high':
+                $query->orderByRaw('COALESCE(rental_price_per_day, 0) DESC');
+                break;
+            case 'name_asc':
+                $query->orderBy('item_name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('item_name', 'desc');
+                break;
+            case 'id_asc':
+                $query->orderBy('item_id', 'asc');
+                break;
+            case 'latest':
+            default:
+                $query->orderByDesc('created_at');
+                break;
+        }
+
+        $items = $query->paginate(20)->withQueryString();
 
         return view('admin.items.index', compact('items'));
     }
