@@ -7,34 +7,36 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Auth\Passwords\CanResetPassword; 
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract; 
 
+
 class User extends Authenticatable implements CanResetPasswordContract 
 {
+
     use Notifiable; 
     use CanResetPassword;
+
+    protected $table = 'users';
     protected $primaryKey = 'user_id';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'username', 'password', 'full_name', 'email',
-        'phone_number', 'address', 'role'
+        'username',
+        'password',
+        'full_name',
+        'email',
+        'phone_number',
+        'address',
+        'role',
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
-    // Relasi
-    public function rentals()
+    public function isAdmin(): bool
     {
-        return $this->hasMany(Rental::class, 'user_id', 'user_id');
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Buy::class, 'user_id', 'user_id');
-    }
-
-    public function ratings()
-    {
-        return $this->hasMany(Rating::class, 'user_id', 'user_id');
+        // nilai role di DB: admin, customer, dll
+        return $this->role === 'admin';
     }
 }
