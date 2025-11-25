@@ -99,12 +99,18 @@ Route::middleware(['auth', 'admin'])
 
         // Rental
         Route::resource('rentals', RentalController::class)->only(['index', 'show', 'update']);
+        Route::post('/rentals/{rental}/denda', [RentalController::class, 'updateDenda'])->name('rentals.update-denda');
 
-        // User (ubah role)
+        Route::resource('buys', \App\Http\Controllers\Admin\BuyController::class);
+
+        // User (ubah role) 
         Route::resource('users', UserController::class)->only(['index', 'show']);
 
         // Review
         Route::resource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);
+
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/financial-report', [DashboardController::class, 'financialReport'])->name('financial-report');
     });
 
 require __DIR__.'/auth.php';
