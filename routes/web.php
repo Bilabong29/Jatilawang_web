@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Auth\SocialiteController;
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ItemController;
@@ -38,8 +39,11 @@ Route::post('/cart', [CartController::class, 'store'])->name('cart.store');     
 Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');    // ubah qty
 Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy'); // hapus item
 
-// OAuth (placeholder)
-Route::get('/auth/redirect/{provider}', fn () => abort(501))->name('social.redirect');
+// Social login (guest only)
+Route::middleware('guest')->group(function () {
+    Route::get('/auth/redirect/{provider}', [SocialiteController::class, 'redirect'])->name('social.redirect');
+    Route::get('/auth/callback/{provider}', [SocialiteController::class, 'callback'])->name('social.callback');
+});
 
 // Footer
 Route::view('/cara-sewa', 'public.cara-sewa')->name('cara-sewa');

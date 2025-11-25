@@ -91,12 +91,6 @@
                 <img src="{{ asset('storage/icons/google.png') }}" alt="Logo Google" class="h-5 w-5 object-contain">
                 <span class="font-medium text-neutral-700">Masuk dengan Google</span>
               </a>
-
-              <a href="{{ route('social.redirect','apple') }}"
-                 class="flex flex-1 items-center justify-center gap-3 rounded-lg border border-neutral-200 bg-white py-2.5 text-sm hover:bg-neutral-50 shadow-sm transition">
-                <img src="{{ asset('storage/icons/apple.png') }}" alt="Logo Apple" class="h-5 w-5 object-contain">
-                <span class="font-medium text-neutral-700">Masuk dengan Apple</span>
-              </a>
             </div>
 
             <p class="text-xs text-neutral-700 text-center">
