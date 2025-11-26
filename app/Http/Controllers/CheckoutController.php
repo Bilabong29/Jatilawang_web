@@ -1,5 +1,5 @@
 <?php
-// app/Http\Controllers/CheckoutController.php
+// app/Http\Controllers\CheckoutController.php
 namespace App\Http\Controllers;
 
 use App\Models\CartItem;
@@ -81,6 +81,8 @@ class CheckoutController extends Controller
                 $validationRules = [
                     'payment_method' => 'required|in:qris,transfer,cash',
                     'delivery_option' => 'required|in:pickup,delivery',
+                    'shipping_lat' => 'nullable|numeric',
+                    'shipping_lng' => 'nullable|numeric',
                 ];
 
                 // Add shipping address validation if delivery is selected
@@ -98,7 +100,15 @@ class CheckoutController extends Controller
 
                 $validated = $request->validate($validationRules);
 
-                // Manual date validation
+                // Handle shipping coordinates
+                $shippingLat = $validated['shipping_lat'] ?? null;
+                $shippingLng = $validated['shipping_lng'] ?? null;
+                if (($validated['delivery_option'] ?? 'pickup') !== 'delivery') {
+                    $shippingLat = null;
+                    $shippingLng = null;
+                }
+
+                // Manual date validation untuk rental
                 if ($hasRental) {
                     $startDate = \Carbon\Carbon::parse($validated['rental_start_date']);
                     $today = \Carbon\Carbon::today();
@@ -148,6 +158,8 @@ class CheckoutController extends Controller
                         'identity_file' => $identityPath,
                         'identity_type' => $validated['identity_type'],
                         'shipping_address' => $validated['shipping_address'] ?? null,
+                        'shipping_lat' => $shippingLat,
+                        'shipping_lng' => $shippingLng,
                     ]);
 
                     // Create rental details
@@ -180,6 +192,8 @@ class CheckoutController extends Controller
                         'order_status' => 'menunggu_verifikasi',
                         'delivery_option' => $validated['delivery_option'],
                         'shipping_address' => $validated['shipping_address'] ?? null,
+                        'shipping_lat' => $shippingLat,
+                        'shipping_lng' => $shippingLng,
                     ]);
 
                     foreach ($purchaseItems as $cartItem) {
