@@ -147,7 +147,7 @@
                             
                             {{-- WHATSAPP BUTTON --}}
                             @if(in_array($rental->order_status, ['menunggu_verifikasi', 'dikonfirmasi', 'sedang_berjalan']))
-                            <a href="https://wa.me/6288888888888?text={{ urlencode("Halo Admin Jatilawang Adventure,
+                            <a href="https://wa.me/6285742341424?text={{ urlencode("Halo Admin Jatilawang Adventure,
 
 Saya butuh bantuan untuk pesanan saya:
 
@@ -229,7 +229,7 @@ Terima kasih") }}"
                             
                             {{-- WHATSAPP BUTTON --}}
                             @if(in_array($buy->order_status, ['menunggu_verifikasi', 'dikonfirmasi', 'diproses', 'dikirim']))
-                            <a href="https://wa.me/6288888888888?text={{ urlencode("Halo Admin Jatilawang Adventure,
+                            <a href="https://wa.me/6285742341424?text={{ urlencode("Halo Admin Jatilawang Adventure,
 
 Saya butuh bantuan untuk pesanan saya:
 
