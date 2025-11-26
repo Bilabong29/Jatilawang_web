@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const debugStatus = document.getElementById('debug-status');
     
     if (debugApiUrl && debugStatus) {
-        debugApiUrl.textContent = `/products/{{ $item->item_id }}/reviews`;
+        debugApiUrl.textContent = "{{ route('products.reviews.index', $item->item_id) }}";
         debugStatus.textContent = 'Status: JavaScript loaded, fetching data...';
     }
 
@@ -108,8 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load reviews function
     function loadReviews() {
-        const productId = {{ $item->item_id }};
-        const url = `/products/${productId}/reviews`;
+        const productId = Number("{{ $item->item_id }}");
+        const url = "{{ route('products.reviews.index', $item->item_id) }}";
         
         console.log('Fetching from:', url);
         

@@ -155,7 +155,7 @@
                             <p class="text-sm uppercase tracking-[0.3em] text-emerald-500">Tim Pengembang</p>
                             <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-2">Kenalan dengan Kami</h2>
                             <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
-                                Halo kami adalah developer dari Web Jatilawang Adventure. Semua foto diambil langsung dari postingan Instagram masing-masing anggota sesuai permintaan Anda.
+                                Halo kami adalah developer dari Web Jatilawang Adventure. Kami masih pemula dalam pembuatan dan pengembangan web ini.
                             </p>
                         </div>
 

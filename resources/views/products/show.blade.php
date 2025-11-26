@@ -297,9 +297,10 @@
 </style>
 
 <div id="product-data" 
-     data-rent-price="{{ $rentalPrice }}" 
-     data-sale-price="{{ $salePrice }}"
-     style="display:none"></div>
+    data-is-rentable="{{ $item->is_rentable && $item->rental_stock > 0 ? 1 : 0 }}"
+    data-rent-price="{{ $rentalPrice }}" 
+    data-sale-price="{{ $salePrice }}"
+    style="display:none"></div>
 
 <script>
     function formatRupiah(num){
@@ -308,13 +309,13 @@
 
     function getBasePrice(){
         const productData = document.getElementById('product-data');
-        const isRentable = {{ $item->is_rentable && $item->rental_stock > 0 ? 'true' : 'false' }};
-        
-        if (isRentable) {
-            return Number(productData.dataset.rentPrice);
-        } else {
-            return Number(productData.dataset.salePrice);
-        }
+        if (!productData) return 0;
+
+        const isRentable = productData.dataset.isRentable === '1';
+        const rentPrice = Number(productData.dataset.rentPrice || 0);
+        const salePrice = Number(productData.dataset.salePrice || 0);
+
+        return isRentable ? rentPrice : salePrice;
     }
 
     function updateTotals(){
