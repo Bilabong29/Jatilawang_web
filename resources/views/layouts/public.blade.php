@@ -40,10 +40,10 @@
 <body style="font-family:sans-serif; background:white; color:#111;">
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="h-20 flex items-center justify-between gap-6">
-                
+            <div class="h-20 flex items-center gap-4 w-full">
+
                 {{-- Logo & Brand --}}
-                <div class="flex items-center">
+                <div class="flex items-center flex-none">
                     <a href="{{ url('/') }}" class="text-3xl font-extrabold tracking-tight text-gray-900">
                         Jatilawang
                     </a>
@@ -202,12 +202,58 @@
                     </div>
                 </div>
 
-                {{-- Hamburger Button - Mobile --}}
-                <button id="hamburger-button" class="lg:hidden flex flex-col space-y-1.5 p-2">
-                    <span class="hamburger-line block w-6 h-0.5 bg-gray-700"></span>
-                    <span class="hamburger-line block w-6 h-0.5 bg-gray-700"></span>
-                    <span class="hamburger-line block w-6 h-0.5 bg-gray-700"></span>
-                </button>
+                <div class="flex items-center gap-2 md:hidden ml-auto">
+                    @auth
+                        @if(auth()->user()->role === 'customer')
+                            <a href="{{ route('cart.index') }}" class="relative inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-900 hover:border-emerald-600 hover:text-emerald-700 transition" aria-label="Keranjang">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 3h2l.4 2M7 13h10l3-7H6.4M7 13L6 6M7 13l-2 7h14M9 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/>
+                                </svg>
+                                <span data-cart-badge class="absolute -top-1.5 -right-1.5 min-w-[18px] min-h-[18px] px-1 rounded-full bg-emerald-700 text-white text-[10px] font-semibold text-center">
+                                    {{ $totalItems ?? 0 }}
+                                </span>
+                            </a>
+                        @endif
+                    @else
+                        <button type="button" onclick="goToLoginWithRedirect()" class="relative inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-900 hover:border-emerald-600 transition" aria-label="Keranjang (Login dulu)">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 3h2l.4 2M7 13h10l3-7H6.4M7 13L6 6M7 13l-2 7h14M9 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/>
+                            </svg>
+                            <span data-cart-badge class="absolute -top-1.5 -right-1.5 min-w-[18px] min-h-[18px] px-1 rounded-full bg-gray-400 text-white text-[10px] font-semibold text-center">0</span>
+                        </button>
+                    @endauth
+
+                    @auth
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-600 hover:border-gray-300" aria-label="Dashboard">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 3h7v7H3V3zm11 0h7v7h-7V3zM3 14h7v7H3v-7zm11 0h7v7h-7v-7z" />
+                                </svg>
+                            </a>
+                        @else
+                            <a href="{{ route('profile.edit') }}" class="inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-600 hover:border-emerald-600" aria-label="Profil Saya">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ route('login') }}" class="inline-flex items-center justify-center w-11 h-11 rounded-full border border-gray-200 text-gray-600 hover:border-emerald-600" aria-label="Login">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0H5z" />
+                            </svg>
+                        </a>
+                    @endauth
+
+                    {{-- Hamburger Button - Mobile --}}
+                    <button id="hamburger-button" class="lg:hidden flex flex-col space-y-1.5 p-2" aria-label="Buka menu">
+                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700"></span>
+                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700"></span>
+                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700"></span>
+                    </button>
+                </div>
             </div>
 
             {{-- Mobile Menu --}}
@@ -321,16 +367,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const hamburgerButton = document.getElementById('hamburger-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            
-            // Toggle hamburger menu
+
             if (hamburgerButton && mobileMenu) {
                 hamburgerButton.addEventListener('click', function() {
                     hamburgerButton.classList.toggle('hamburger-active');
                     mobileMenu.classList.toggle('hidden');
                 });
             }
-            
-            // Close mobile menu when clicking on links
+
             const mobileLinks = document.querySelectorAll('#mobile-menu a');
             mobileLinks.forEach(link => {
                 link.addEventListener('click', function() {
