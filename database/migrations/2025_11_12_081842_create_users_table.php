@@ -9,7 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('user_id'); // AUTO_INCREMENT PRIMARY KEY
+            $table->id('user_id'); 
+            $table->string('google_id')->nullable()->unique();
+            $table->string('google_avatar')->nullable();
+            $table->string('google_token', 2048)->nullable();
             $table->rememberToken();
             $table->string('username', 50)->unique();
             $table->string('password', 255);
