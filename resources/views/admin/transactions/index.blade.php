@@ -272,7 +272,7 @@
                                 <button type="submit" 
                                         class="text-green-600 hover:text-green-900 mr-4"
                                         onclick="return confirm('Verifikasi pembayaran transaksi ini?')">
-                                    Verify
+                                    Verifikasi
                                 </button>
                             </form>
                             <form action="{{ route('admin.transactions.reject', $transaction) }}" method="POST" class="inline">
@@ -280,7 +280,7 @@
                                 <button type="submit" 
                                         class="text-red-600 hover:text-red-900 mr-4"
                                         onclick="return confirm('Tolak pembayaran transaksi ini?')">
-                                    Reject
+                                    Tolak
                                 </button>
                             </form>
                             @endif

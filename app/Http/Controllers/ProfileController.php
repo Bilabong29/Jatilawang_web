@@ -18,11 +18,17 @@ class ProfileController extends Controller
 
     public function verify(Request $request)
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->needsPasswordSetup()) {
+            return redirect()->route('profile.change-password')
+                ->with('warning', 'Akun Anda dibuat melalui Google. Buat password lokal terlebih dahulu agar bisa verifikasi perubahan.');
+        }
+
         $request->validate([
             'password' => 'required'
         ]);
-
-        $user = Auth::user();
 
         if (!Hash::check($request->password, $user->password)) {
             return back()->withErrors(['password' => 'Kata sandi tidak valid']);
@@ -80,31 +86,43 @@ class ProfileController extends Controller
     // Tampilkan form ubah password
     public function showChangePasswordForm()
     {
-        return view('profile.change-password');
+        $user = Auth::user();
+
+        return view('profile.change-password', [
+            'needsPasswordSetup' => $user->needsPasswordSetup(),
+        ]);
     }
 
     // Proses update password
     public function updatePassword(Request $request)
     {
-        $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|min:8|confirmed',
-        ]);
-
-         /** @var User $user */
+        /** @var User $user */
         $user = Auth::user();
+        $needsSetup = $user->needsPasswordSetup();
 
-        // Cek password lama
-        if (!Hash::check($request->current_password, $user->password)) {
+        $rules = [
+            'new_password' => 'required|min:8|confirmed',
+        ];
+
+        if (! $needsSetup) {
+            $rules['current_password'] = 'required';
+        }
+
+        $validated = $request->validate($rules);
+
+        if (! $needsSetup && ! Hash::check($validated['current_password'], $user->password)) {
             return back()->withErrors(['current_password' => 'Password saat ini tidak valid.']);
         }
 
-        // Update password baru
-        $user->update([
-            'password' => Hash::make($request->new_password)
-        ]);
+        $user->forceFill([
+            'password' => Hash::make($validated['new_password']),
+            'must_set_password' => false,
+            'password_set_at' => now(),
+        ])->save();
 
-        return redirect()->route('profile.edit')->with('success', 'Password berhasil diubah!');
+        $message = $needsSetup ? 'Password lokal berhasil dibuat! Silakan gunakan password ini untuk verifikasi selanjutnya.' : 'Password berhasil diubah!';
+
+        return redirect()->route('profile.edit')->with('success', $message);
     }
 
     public function orders()

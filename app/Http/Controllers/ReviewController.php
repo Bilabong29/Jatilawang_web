@@ -9,6 +9,7 @@ use App\Models\Buy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ReviewController extends Controller
 {
@@ -44,6 +45,12 @@ class ReviewController extends Controller
     public function store(Request $request, $type, $id)
     {
         $user = Auth::user();
+        Log::info('Review store request received', [
+            'user_id' => $user?->user_id,
+            'type' => $type,
+            'order_id' => $id,
+            'payload' => $request->except(['_token'])
+        ]);
         
         // Validasi type
         if (!in_array($type, ['rental', 'buy'])) {
@@ -103,17 +110,30 @@ class ReviewController extends Controller
             ]);
 
             DB::commit();
+            Log::info('Review stored successfully', [
+                'rating_id' => $rating->rating_id,
+                'user_id' => $user->user_id,
+                'type' => $type,
+                'order_id' => $id
+            ]);
 
             return redirect()
                 ->route('profile.orders')
                 ->with('success', 'Review berhasil dikirim! Terima kasih atas feedback Anda.');
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
+            Log::error('Failed to store review', [
+                'message' => $e->getMessage(),
+                'user_id' => $user->user_id,
+                'type' => $type,
+                'order_id' => $id,
+                'trace' => $e->getTraceAsString()
+            ]);
             
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Terjadi kesalahan sistem. Silakan coba lagi.']);
+                ->withErrors(['error' => 'Terjadi kesalahan sistem. Silakan coba lagi atau hubungi admin.']);
         }
     }
 

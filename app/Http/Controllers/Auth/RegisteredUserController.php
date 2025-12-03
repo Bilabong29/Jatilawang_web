@@ -47,6 +47,8 @@ class RegisteredUserController extends Controller
             'address' => $request->address,
             'password' => Hash::make($request->password),
             'role' => 'customer',
+            'must_set_password' => false,
+            'password_set_at' => now(),
         ]);
 
         event(new Registered($user));

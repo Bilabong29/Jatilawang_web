@@ -9,9 +9,9 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     {{-- Breadcrumb & Toolbar --}}
-    <div class="flex items-center justify-between gap-4 mb-6">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
       <nav class="text-sm text-gray-500">
-        <ol class="flex items-center gap-2">
+        <ol class="flex items-center gap-2 flex-wrap">
           <li>
             <a href="/" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -26,7 +26,7 @@
       </nav>
 
       {{-- SORTING --}}
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 flex-wrap">
         <span class="text-sm text-gray-600 hidden sm:block">Urut berdasarkan:</span>
         <form method="GET" action="{{ route('products.index') }}" class="inline">
           <select name="sort" onchange="this.form.submit()"
@@ -59,9 +59,9 @@
     <div class="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
       {{-- SIDEBAR FILTER --}}
-      <aside class="lg:col-span-3">
+      <aside class="lg:col-span-3 order-2 lg:order-1">
         <form method="GET" action="{{ route('products.index') }}" id="filterForm">
-          <div class="rounded-xl border border-gray-200 p-5 bg-white sticky top-24">
+          <div class="rounded-xl border border-gray-200 p-5 bg-white lg:sticky lg:top-24">
 
             <h3 class="font-bold text-gray-900 mb-5">Filter Produk</h3>
 
@@ -135,7 +135,7 @@
       </aside>
 
       {{-- GRID PRODUK --}}
-      <div class="lg:col-span-9">
+      <div class="lg:col-span-9 order-1 lg:order-2">
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
 
           @forelse ($items as $item)

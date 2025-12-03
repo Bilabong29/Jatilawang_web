@@ -32,6 +32,8 @@ class User extends Authenticatable implements CanResetPasswordContract
         'google_id',
         'google_avatar',
         'google_token',
+        'must_set_password',
+        'password_set_at',
     ];
 
     protected $hidden = [
@@ -39,9 +41,19 @@ class User extends Authenticatable implements CanResetPasswordContract
         'remember_token',
     ];
 
+    protected $casts = [
+        'must_set_password' => 'boolean',
+        'password_set_at' => 'datetime',
+    ];
+
     public function isAdmin(): bool
     {
         // nilai role di DB: admin, customer, dll
         return $this->role === 'admin';
+    }
+
+    public function needsPasswordSetup(): bool
+    {
+        return (bool) $this->must_set_password;
     }
 }

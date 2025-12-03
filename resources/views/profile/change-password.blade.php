@@ -30,10 +30,19 @@
     {{-- ===================== MAIN CONTENT ===================== --}}
     <section class="py-16 bg-white">
         <div class="max-w-4xl mx-auto px-6 md:px-8">
+            @php $needsPasswordSetup = $needsPasswordSetup ?? (auth()->user()?->needsPasswordSetup() ?? false); @endphp
+
             {{-- Alert Success --}}
             @if(session('success'))
                 <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
                     {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Alert Warning --}}
+            @if(session('warning'))
+                <div class="mb-6 bg-amber-50 border border-amber-300 text-amber-900 px-4 py-3 rounded-lg">
+                    {{ session('warning') }}
                 </div>
             @endif
 
@@ -86,32 +95,41 @@
                 {{-- ===================== FORM UBAH PASSWORD ===================== --}}
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Ubah Kata Sandi</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                            {{ $needsPasswordSetup ? 'Buat Kata Sandi Lokal' : 'Ubah Kata Sandi' }}
+                        </h2>
+                        @if($needsPasswordSetup)
+                            <div class="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-900 px-4 py-3 rounded-lg">
+                                Akun Anda pertama kali dibuat melalui Google, jadi belum memiliki kata sandi lokal. Buat kata sandi baru di bawah ini untuk mengaktifkan verifikasi profil dan login dengan email/password.
+                            </div>
+                        @endif
                         
                         <form action="{{ route('profile.password.update') }}" method="POST">
                             @csrf
                             @method('PUT')
 
-                            {{-- Current Password --}}
-                            <div class="mb-6">
-                                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Kata Sandi Saat Ini *
-                                </label>
-                                <input type="password" 
-                                       id="current_password" 
-                                       name="current_password"
-                                       required
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                                       placeholder="Masukkan kata sandi saat ini">
-                                @error('current_password')
-                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            @unless($needsPasswordSetup)
+                                {{-- Current Password --}}
+                                <div class="mb-6">
+                                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Kata Sandi Saat Ini *
+                                    </label>
+                                    <input type="password" 
+                                           id="current_password" 
+                                           name="current_password"
+                                           required
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                                           placeholder="Masukkan kata sandi saat ini">
+                                    @error('current_password')
+                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            @endunless
 
                             {{-- New Password --}}
                             <div class="mb-6">
                                 <label for="new_password" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Kata Sandi Baru *
+                                    {{ $needsPasswordSetup ? 'Buat Kata Sandi Baru *' : 'Kata Sandi Baru *' }}
                                 </label>
                                 <input type="password" 
                                        id="new_password" 
@@ -152,7 +170,7 @@
                             <div class="flex gap-4">
                                 <button type="submit"
                                         class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-                                    Ubah Kata Sandi
+                                    {{ $needsPasswordSetup ? 'Buat Password' : 'Ubah Kata Sandi' }}
                                 </button>
                                 <a href="{{ route('profile.edit') }}"
                                    class="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors">

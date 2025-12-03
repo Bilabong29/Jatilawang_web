@@ -30,6 +30,12 @@ Route::get('/', [ProductController::class, 'home'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{item_name}', [ProductController::class, 'show'])->name('products.show');
 
+// Endpoint ulasan produk (perlu publik untuk menghindari redirect login ketika fetch)
+Route::get('/products/{product}/reviews', [ProductController::class, 'reviews'])
+    ->name('products.reviews.index');
+Route::get('/products/{item_name}/reviews-page', [ProductController::class, 'reviewsPage'])
+    ->name('products.reviews.page');
+
 // Keranjang (boleh guest; simpan di session)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');                 // tambah item
@@ -106,8 +112,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/reviews/{rating}', [ReviewControllerCust::class, 'destroy'])
         ->name('reviews.destroy');
 
-    Route::get('/products/{product}/reviews', [ProductController::class, 'reviews'])->name('products.reviews.index');
-    Route::get('/products/{item_name}/reviews-page', [ProductController::class, 'reviewsPage'])->name('products.reviews.page');
 });
 
 /**
