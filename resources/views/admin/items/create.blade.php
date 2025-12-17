@@ -22,33 +22,6 @@
             <form method="POST" action="{{ route('admin.items.store') }}" class="space-y-6">
                 @csrf
 
-                {{-- ID Produk --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        ID Produk <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="number"
-                        name="item_id"
-                        value="{{ old('item_id') }}"
-                        class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
-                               focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
-                        placeholder="Contoh: 101"
-                        required
-                    >
-                    <p class="text-xs text-gray-500 mt-2">
-                        ID unik untuk produk. Pastikan tidak sama dengan produk lain.
-                    </p>
-                    @error('item_id')
-                        <p class="text-xs text-red-500 mt-2 flex items-center gap-1">
-                            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
-
                 {{-- Nama & Kategori --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
@@ -71,21 +44,43 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Kategori <span class="text-red-500">*</span>
+                            Pilih Kategori
                         </label>
-                        <input
-                            type="text"
-                            name="category"
-                            value="{{ old('category') }}"
+                        <select
+                            name="category_selected"
                             class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
                                    focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
-                            placeholder="Contoh: Tenda, Carrier, Sepatu"
-                            required
                         >
-                        @error('category')
+                            <option value="">-- Pilih kategori --</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat }}" {{ old('category_selected') === $cat ? 'selected' : '' }}>
+                                    {{ ucfirst($cat) }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="text-xs text-gray-500 mt-2">Pilih kategori yang sudah ada, atau isi kategori baru di bawah.</p>
+                        @error('category_selected')
                             <p class="text-xs text-red-500 mt-2">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                {{-- Kategori Baru Opsional --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Kategori Baru (opsional)
+                    </label>
+                    <input
+                        type="text"
+                        name="new_category"
+                        value="{{ old('new_category') }}"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
+                               focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                        placeholder="Isi jika ingin menambahkan kategori baru"
+                    >
+                    @error('new_category')
+                        <p class="text-xs text-red-500 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- URL Gambar --}}
@@ -120,6 +115,7 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
                             <input
                                 type="number"
+                                id="rental_price_per_day"
                                 name="rental_price_per_day"
                                 value="{{ old('rental_price_per_day') }}"
                                 class="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-3 text-sm
@@ -136,6 +132,7 @@
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">Rp</span>
                             <input
                                 type="number"
+                                id="sale_price"
                                 name="sale_price"
                                 value="{{ old('sale_price') }}"
                                 class="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-3 text-sm
@@ -154,6 +151,7 @@
                         </label>
                         <input
                             type="number"
+                            id="rental_stock"
                             name="rental_stock"
                             value="{{ old('rental_stock', 0) }}"
                             class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
@@ -166,6 +164,7 @@
                         </label>
                         <input
                             type="number"
+                            id="sale_stock"
                             name="sale_stock"
                             value="{{ old('sale_stock', 0) }}"
                             class="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm
@@ -184,6 +183,7 @@
                         <input
                             type="number"
                             step="0.01"
+                            id="penalty_per_days"
                             name="penalty_per_days"
                             value="{{ old('penalty_per_days', 0) }}"
                             class="w-full rounded-lg border border-gray-300 pl-10 pr-4 py-3 text-sm
@@ -217,10 +217,13 @@
                             name="is_sellable"
                             value="1"
                             class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            {{ old('is_sellable', 1) ? 'checked' : '' }}
+                            {{ old('is_sellable', 0) ? 'checked' : '' }}
                         >
                         <span class="ml-2 font-medium">Bisa dijual</span>
                     </label>
+                    @error('is_rentable')
+                        <p class="text-xs text-red-500 mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Deskripsi --}}
@@ -257,4 +260,63 @@
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const rentCheckbox = document.querySelector('input[name="is_rentable"][type="checkbox"]');
+                const sellCheckbox = document.querySelector('input[name="is_sellable"][type="checkbox"]');
+
+                const rentFields = [
+                    document.getElementById('rental_price_per_day'),
+                    document.getElementById('rental_stock'),
+                    document.getElementById('penalty_per_days')
+                ];
+
+                const sellFields = [
+                    document.getElementById('sale_price'),
+                    document.getElementById('sale_stock')
+                ];
+
+                const toggleFields = (fields, enabled) => {
+                    fields.forEach((field) => {
+                        field.disabled = !enabled;
+                        if (!enabled) {
+                            field.value = '';
+                        }
+                    });
+                };
+
+                const syncState = (source) => {
+                    if (source === 'rent' && rentCheckbox.checked) {
+                        sellCheckbox.checked = false;
+                    }
+
+                    if (source === 'sell' && sellCheckbox.checked) {
+                        rentCheckbox.checked = false;
+                    }
+
+                    // Jika keduanya aktif (misal data lama), paksa hanya satu yang tersisa
+                    if (rentCheckbox.checked && sellCheckbox.checked) {
+                        if (source === 'sell') {
+                            rentCheckbox.checked = false;
+                        } else {
+                            sellCheckbox.checked = false;
+                        }
+                    }
+
+                    const rentActive = rentCheckbox.checked;
+                    const sellActive = sellCheckbox.checked;
+
+                    toggleFields(rentFields, rentActive);
+                    toggleFields(sellFields, sellActive);
+                };
+
+                rentCheckbox.addEventListener('change', () => syncState('rent'));
+                sellCheckbox.addEventListener('change', () => syncState('sell'));
+
+                syncState();
+            });
+        </script>
+    @endpush
 @endsection

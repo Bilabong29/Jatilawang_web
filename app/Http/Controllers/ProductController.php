@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\DetailBuy;
+use App\Models\DetailRental;
 use Illuminate\Http\Request;
 use App\Models\Rating;
 use App\Services\ItemRecommendationService;
@@ -17,29 +19,34 @@ class ProductController extends Controller
     }
 
     // ================== HOMEPAGE (3 TAB PRODUK) ==================
-public function home()
-{   
-    
-    // 1. Terbaru — 8 produk terbaru
-    $latest = Item::latest()->take(8)->get();
+    public function home()
+    {
+        // 1. Terbaru — 8 produk terbaru
+        $latest = Item::latest()->take(8)->get();
 
-    // // 2. BESTSELLER — paling banyak disewa + dibeli (fix GROUP BY, pasti jalan!)
-    // $bestseller = Item::select('items.*')
-    //     ->leftJoin('detail_rentals', 'items.item_id', '=', 'detail_rentals.item_id')
-    //     ->leftJoin('detail_buys', 'items.item_id', '=', 'detail_buys.item_id')
-    //     ->selectRaw('items.*, 
-    //         COALESCE(SUM(detail_rentals.quantity), 0) + COALESCE(SUM(detail_buys.quantity), 0) AS total_sold')
-    //     ->groupBy('items.item_id')
-    //     ->orderByDesc('total_sold')
-    //     ->take(8)
-    //     ->get();
+        // 2. Rekomendasi populer: berdasarkan total transaksi (sewa + beli)
+        $rentalStats = DetailRental::selectRaw('item_id, SUM(quantity) as rental_qty')
+            ->groupBy('item_id');
 
-    // 3. REKOMENDASI : random aja dari semua item
-    $recommended = Item::inRandomOrder()->take(8)->get();
+        $buyStats = DetailBuy::selectRaw('item_id, SUM(quantity) as buy_qty')
+            ->groupBy('item_id');
 
-    // return view('home', compact('latest', 'bestseller', 'recommended'));
-    return view('home', compact('latest', 'recommended'));
-}
+        $recommended = Item::query()
+            ->select('items.*')
+            ->selectRaw('COALESCE(rental_stats.rental_qty, 0) + COALESCE(buy_stats.buy_qty, 0) as total_sold')
+            ->leftJoinSub($rentalStats, 'rental_stats', function ($join) {
+                $join->on('items.item_id', '=', 'rental_stats.item_id');
+            })
+            ->leftJoinSub($buyStats, 'buy_stats', function ($join) {
+                $join->on('items.item_id', '=', 'buy_stats.item_id');
+            })
+            ->orderByDesc('total_sold')
+            ->orderByDesc('items.created_at')
+            ->take(8)
+            ->get();
+
+        return view('home', compact('latest', 'recommended'));
+    }
     // ================== DAFTAR PRODUK ==================
     public function index(Request $request)
     {

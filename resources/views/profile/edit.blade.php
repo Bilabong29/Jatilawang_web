@@ -84,6 +84,12 @@
                             </button>
                         </div>
 
+                        @if(auth()->user()->google_id)
+                        <div class="mb-6 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-4 text-sm">
+                            Anda login dengan Google. Jika belum pernah membuat kata sandi, silakan buat terlebih dahulu di menu <a href="{{ route('profile.change-password') }}" class="font-semibold text-amber-900 underline">Ubah Kata Sandi</a> sebelum mengubah profil.
+                        </div>
+                        @endif
+
                         {{-- Profil Display --}}
                         <div class="space-y-6">
                             <div class="grid md:grid-cols-2 gap-6">
@@ -153,6 +159,12 @@
             </div>
             
             <p class="text-gray-600 mb-6">Masukkan kata sandi Anda untuk mengubah profil</p>
+
+            @if(auth()->user()->google_id)
+            <div class="mb-4 bg-amber-50 border border-amber-200 text-amber-900 px-4 py-3 rounded-lg text-sm">
+                Jika belum membuat kata sandi, buka halaman <a href="{{ route('profile.change-password') }}" class="font-semibold underline">Ubah Kata Sandi</a> terlebih dahulu, lalu kembali ke sini untuk verifikasi.
+            </div>
+            @endif
             
             {{-- Error di modal --}}
             @if($errors->has('password'))

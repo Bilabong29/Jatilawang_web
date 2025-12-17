@@ -92,7 +92,8 @@
                             @csrf
                             @method('PUT')
 
-                            {{-- Current Password --}}
+                            {{-- Current Password (hanya non-Google) --}}
+                            @if(auth()->user()->google_id === null)
                             <div class="mb-6">
                                 <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
                                     Kata Sandi Saat Ini *
@@ -107,6 +108,11 @@
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+                            @else
+                            <div class="mb-6 bg-emerald-50 border border-emerald-100 rounded-lg p-4 text-sm text-emerald-900">
+                                Akun Google Anda belum memiliki kata sandi. Silakan buat kata sandi baru di bawah ini tanpa perlu mengisi kata sandi saat ini.
+                            </div>
+                            @endif
 
                             {{-- New Password --}}
                             <div class="mb-6">
