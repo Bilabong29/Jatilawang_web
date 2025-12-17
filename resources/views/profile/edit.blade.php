@@ -27,10 +27,20 @@
     {{-- MAIN CONTENT --}}
     <section class="py-16 bg-white">
         <div class="max-w-4xl mx-auto px-6 md:px-8">
+            @php $needsPasswordSetup = auth()->user()?->needsPasswordSetup() ?? false; @endphp
+
             {{-- Alert Success --}}
             @if(session('success'))
                 <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
                     {{ session('success') }}
+                </div>
+            @endif
+
+            @if($needsPasswordSetup)
+                <div class="mb-6 bg-amber-50 border border-amber-200 text-amber-900 px-4 py-3 rounded-lg flex flex-col gap-1">
+                    <span class="font-semibold">Akun Google terdeteksi.</span>
+                    <span>Buat kata sandi lokal terlebih dahulu agar bisa verifikasi dan mengubah profil.</span>
+                    <a href="{{ route('profile.change-password') }}" class="text-emerald-700 font-semibold underline">Buat Password Sekarang</a>
                 </div>
             @endif
 
@@ -74,8 +84,8 @@
                     <div class="bg-white rounded-xl border border-gray-200 p-6 md:p-8">
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-2xl font-bold text-gray-900">Informasi Profil</h2>
-                            <button type="button" 
-                                    onclick="openEditModal()"
+                                <button type="button" 
+                                    onclick="triggerProfileEdit()"
                                     class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -203,6 +213,16 @@
     </div>
 
     <script>
+        const needsPasswordSetup = @json($needsPasswordSetup);
+
+        function triggerProfileEdit() {
+            if (needsPasswordSetup) {
+                window.location.href = "{{ route('profile.change-password') }}";
+                return;
+            }
+            openEditModal();
+        }
+
         function openEditModal() {
             document.getElementById('editModal').classList.remove('hidden');
         }

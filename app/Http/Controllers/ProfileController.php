@@ -18,11 +18,17 @@ class ProfileController extends Controller
 
     public function verify(Request $request)
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->needsPasswordSetup()) {
+            return redirect()->route('profile.change-password')
+                ->with('warning', 'Akun Anda dibuat melalui Google. Buat password lokal terlebih dahulu agar bisa verifikasi perubahan.');
+        }
+
         $request->validate([
             'password' => 'required'
         ]);
-
-        $user = Auth::user();
 
         if (!Hash::check($request->password, $user->password)) {
             return back()->withErrors(['password' => 'Kata sandi tidak valid']);
@@ -80,7 +86,11 @@ class ProfileController extends Controller
     // Tampilkan form ubah password
     public function showChangePasswordForm()
     {
-        return view('profile.change-password');
+        $user = Auth::user();
+
+        return view('profile.change-password', [
+            'needsPasswordSetup' => $user->needsPasswordSetup(),
+        ]);
     }
 
     // Proses update password
@@ -109,7 +119,7 @@ class ProfileController extends Controller
             'password' => Hash::make($validated['new_password'])
         ]);
 
-        return redirect()->route('profile.edit')->with('success', 'Password berhasil diubah!');
+        return redirect()->route('profile.edit')->with('success', $message);
     }
 
     public function orders()

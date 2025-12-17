@@ -14,15 +14,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Raleway:wght@700;800&display=swap" rel="stylesheet">
 </head>
 
-<body class="min-h-screen font-inter bg-gradient-to-r from-emerald-50 via-emerald-100/50 to-white text-neutral-900">
-  <main class="grid min-h-screen grid-rows-[1fr_auto] overflow-hidden">
+@php
+    $authMedia = [
+        'hero' => 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80',
+    ];
+@endphp
+
+<body class="min-h-screen font-inter bg-gradient-to-b from-emerald-50 via-white to-emerald-50 text-neutral-900">
+  <main class="flex min-h-screen flex-col">
 
     {{-- ===== HERO LOGIN ===== --}}
-    <section class="relative grid w-full md:grid-cols-2 min-h-screen">
+    <section class="relative flex flex-1 flex-col md:grid md:grid-cols-2">
+
+      {{-- MOBILE HERO PREVIEW --}}
+      <div class="relative block md:hidden h-56 sm:h-64">
+        <img src="{{ $authMedia['hero'] }}"
+             alt="Panorama pegunungan"
+             class="absolute inset-0 h-full w-full object-cover object-center">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent"></div>
+        <div class="absolute bottom-4 left-5 text-white/90 text-xs tracking-widest uppercase">
+          <p class="font-semibold">Jatilawang Adventure</p>
+          <p class="text-[11px] normal-case tracking-normal">Petualangan nyaman di setiap langkah</p>
+        </div>
+      </div>
 
       {{-- KIRI: FORM LOGIN --}}
-      <div class="flex items-center justify-center px-8 md:px-16 py-20 bg-gradient-to-br from-white via-emerald-50 to-emerald-100">
-        <div class="w-full max-w-xl bg-white/80 backdrop-blur-md rounded-3xl shadow-lg ring-1 ring-emerald-100 p-10 md:p-12 transition-transform duration-300 hover:shadow-xl">
+      <div class="flex flex-1 items-center justify-center px-4 sm:px-8 md:px-12 lg:px-16 py-12 md:py-20 bg-gradient-to-br from-white via-emerald-50 to-emerald-100">
+        <div class="w-full max-w-md sm:max-w-lg bg-white/90 backdrop-blur-md rounded-3xl shadow-lg ring-1 ring-emerald-100 p-8 sm:p-10 md:p-12">
 
           {{-- Judul --}}
           <h1 class="mb-2 text-3xl md:text-4xl font-raleway font-extrabold text-emerald-900 tracking-tight">
@@ -103,7 +121,7 @@
 
       {{-- KANAN: GAMBAR --}}
       <div class="relative hidden md:block overflow-hidden">
-        <img src="{{ asset('storage/hero/peaks.jpg') }}"
+        <img src="{{ $authMedia['hero'] }}"
              alt="Pemandangan gunung Jatilawang Adventure"
              class="absolute inset-0 h-full w-full object-cover object-center brightness-90">
         <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-emerald-900/20 to-transparent"></div>

@@ -5,20 +5,20 @@
 @section('content')
 <section class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-8">
+        <div class="mb-8 text-center sm:text-left">
             <h1 class="text-3xl font-bold text-gray-900">Riwayat Pesanan</h1>
             <p class="text-gray-600 mt-2">Lihat semua transaksi sewa dan beli Anda</p>
         </div>
 
         {{-- Info Box --}}
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div class="flex items-start">
+            <div class="flex flex-col sm:flex-row sm:items-start gap-3">
                 <div class="flex-shrink-0">
                     <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                     </svg>
                 </div>
-                <div class="ml-3">
+                <div class="sm:ml-1">
                     <h3 class="text-sm font-medium text-blue-800">Info Transaksi</h3>
                     <div class="mt-2 text-sm text-blue-700">
                         <p>• Pesanan akan diproses dalam 1x24 jam setelah pembayaran terverifikasi</p>
@@ -65,14 +65,14 @@
             @foreach($transactions as $transaction)
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 {{-- Transaction Header --}}
-                <div class="flex justify-between items-start mb-4 pb-4 border-b border-gray-200">
-                    <div>
+                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-4 pb-4 border-b border-gray-200">
+                    <div class="text-left">
                         <h2 class="text-xl font-semibold text-gray-900">Transaksi #TRX-{{ $transaction->transaction_id }}</h2>
                         <p class="text-sm text-gray-500 mt-1">
                             {{ $transaction->created_at->format('d M Y H:i') }}
                         </p>
                     </div>
-                    <div class="text-right">
+                    <div class="text-left md:text-right">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium 
                             @if($transaction->payment_status === 'terbayar') bg-green-100 text-green-800
                             @elseif($transaction->payment_status === 'menunggu_verifikasi') bg-yellow-100 text-yellow-800
@@ -93,9 +93,9 @@
                 {{-- Rental Orders --}}
                 @foreach($transaction->rentals as $rental)
                 <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:bg-gray-50 transition">
-                    <div class="flex justify-between items-start">
+                    <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                         <div class="flex-1">
-                            <div class="flex items-center gap-4 mb-2">
+                            <div class="flex flex-wrap items-center gap-2 sm:gap-4 mb-2">
                                 <h3 class="font-medium text-gray-900">📅 Sewa - SEWA-{{ $rental->rental_id }}</h3>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                     @if($rental->order_status === 'selesai') bg-green-100 text-green-800
@@ -105,7 +105,7 @@
                                     {{ str_replace('_', ' ', $rental->order_status) }}
                                 </span>
                             </div>
-                            <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
                                 <div>Periode:</div>
                                 <div>{{ \Carbon\Carbon::parse($rental->rental_start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($rental->rental_end_date)->format('d M Y') }}</div>
                                 <div>Pengiriman:</div>
@@ -136,10 +136,10 @@
                             </div>
                             @endif
                         </div>
-                        <div class="text-right">
+                        <div class="text-left md:text-right">
                             {{-- REVIEW BUTTON - Hanya untuk order selesai dan belum ada rating --}}
                             @if($rental->order_status === 'selesai' && $rental->ratings->count() === 0)
-                            <a href="{{ route('reviews.create', ['rental', $rental->rental_id]) }}" 
+                            <a href="{{ route('reviews.create', ['type' => 'rental', 'id' => $rental->rental_id]) }}" 
                                class="inline-block px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition mb-2">
                                 ✨ Beri Review
                             </a>
@@ -171,9 +171,9 @@ Terima kasih") }}"
                 {{-- Buy Orders --}}
                 @foreach($transaction->buys as $buy)
                 <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:bg-gray-50 transition">
-                    <div class="flex justify-between items-start">
+                    <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                         <div class="flex-1">
-                            <div class="flex items-center gap-4 mb-2">
+                            <div class="flex flex-wrap items-center gap-2 sm:gap-4 mb-2">
                                 <h3 class="font-medium text-gray-900">🛒 Beli - BELI-{{ $buy->buy_id }}</h3>
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                     @if($buy->order_status === 'selesai') bg-green-100 text-green-800
@@ -183,7 +183,7 @@ Terima kasih") }}"
                                     {{ str_replace('_', ' ', $buy->order_status) }}
                                 </span>
                             </div>
-                            <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-600">
                                 <div>Pengiriman:</div>
                                 <div>{{ $buy->delivery_option === 'delivery' ? 'Antar (Rp 18.000)' : 'Ambil di Tempat' }}</div>
                                 <div>Subtotal:</div>
@@ -218,10 +218,10 @@ Terima kasih") }}"
                             </div>
                             @endif
                         </div>
-                        <div class="text-right">
+                        <div class="text-left md:text-right">
                             {{-- REVIEW BUTTON - Hanya untuk order selesai dan belum ada rating --}}
                             @if($buy->order_status === 'selesai' && $buy->ratings->count() === 0)
-                            <a href="{{ route('reviews.create', ['buy', $buy->buy_id]) }}" 
+                            <a href="{{ route('reviews.create', ['type' => 'buy', 'id' => $buy->buy_id]) }}" 
                                class="inline-block px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition mb-2">
                                 ✨ Beri Review
                             </a>
@@ -252,7 +252,7 @@ Terima kasih") }}"
 
                 {{-- Payment Actions --}}
                 <div class="border-t border-gray-200 pt-4 mt-4">
-                    <div class="flex justify-between items-center">
+                    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div class="text-sm text-gray-600">
                             @if($transaction->payment_status === 'menunggu_pembayaran')
                             <p class="text-yellow-600">Silakan selesaikan pembayaran</p>
@@ -265,7 +265,7 @@ Terima kasih") }}"
                             @endif
                         </div>
                         
-                        <div class="flex gap-2">
+                        <div class="flex flex-col sm:flex-row gap-2">
                             @if($transaction->payment_status === 'menunggu_pembayaran')
                             <a href="{{ route('payment.show', $transaction->transaction_id) }}" 
                                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
