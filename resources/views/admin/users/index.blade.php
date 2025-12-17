@@ -160,11 +160,16 @@
                             </td>
 
                             {{-- Aksi --}}
-                            <td class="py-4 px-6 text-right">
+                            <td class="py-4 px-6 text-right space-x-2">
                                 <a href="{{ route('admin.users.show', $user) }}"
                                    class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-700 
                                           text-xs font-medium rounded-lg hover:bg-blue-100 transition-colors">
                                     Detail
+                                </a>
+                                <a href="{{ route('admin.users.edit', $user) }}"
+                                   class="inline-flex items-center px-3 py-1.5 bg-amber-50 text-amber-700
+                                          text-xs font-medium rounded-lg hover:bg-amber-100 transition-colors">
+                                    Edit
                                 </a>
                             </td>
                         </tr>

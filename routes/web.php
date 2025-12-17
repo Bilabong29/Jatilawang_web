@@ -150,8 +150,8 @@ Route::middleware(['auth', 'admin'])
         ->name('admin.transactions.cancel');
 
 
-        // User (ubah role) 
-        Route::resource('users', UserController::class)->only(['index', 'show']);
+        // User management
+        Route::resource('users', UserController::class)->only(['index', 'show', 'edit', 'update']);
 
         // Review
         Route::resource('reviews', ReviewControllerAdmin::class)->only(['index', 'update', 'destroy']);
