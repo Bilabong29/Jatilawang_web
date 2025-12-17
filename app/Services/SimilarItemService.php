@@ -55,9 +55,10 @@ class SimilarItemService
             });
         }
 
+        // Utamakan popularitas transaksi, lalu kedekatan harga, lalu terbaru
         $items = $query
-            ->orderBy('price_distance')
             ->orderByDesc('popularity_score')
+            ->orderBy('price_distance')
             ->orderByDesc('items.created_at')
             ->limit($limit)
             ->get();

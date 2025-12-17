@@ -77,7 +77,7 @@
                     ['label'=>'Kontak','href'=>route('kontak') , 'active' => request()->routeIs('kontak')],
                 ];
                 @endphp
-                <nav class="hidden lg:flex items-center gap-7">
+                <nav class="hidden md:flex items-center gap-7">
                 @foreach ($nav as $item)
                     <a href="{{ $item['href'] }}"
                     class="{{ $item['active'] ? 'text-gray-900 font-semibold' : 'text-gray-400 hover:text-gray-900' }}">
