@@ -55,6 +55,7 @@ class SimilarItemService
             });
         }
 
+        // Utamakan yang paling banyak transaksi (sewa+beli), lalu kedekatan harga, lalu terbaru
         // Utamakan popularitas transaksi, lalu kedekatan harga, lalu terbaru
         $items = $query
             ->orderByDesc('popularity_score')
