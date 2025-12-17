@@ -108,23 +108,27 @@
                             @csrf
                             @method('PUT')
 
-                            @unless($needsPasswordSetup)
-                                {{-- Current Password --}}
-                                <div class="mb-6">
-                                    <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Kata Sandi Saat Ini *
-                                    </label>
-                                    <input type="password" 
-                                           id="current_password" 
-                                           name="current_password"
-                                           required
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                                           placeholder="Masukkan kata sandi saat ini">
-                                    @error('current_password')
-                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            @endunless
+                            {{-- Current Password (hanya non-Google) --}}
+                            @if(auth()->user()->google_id === null)
+                            <div class="mb-6">
+                                <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Kata Sandi Saat Ini *
+                                </label>
+                                <input type="password" 
+                                       id="current_password" 
+                                       name="current_password"
+                                       required
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                                       placeholder="Masukkan kata sandi saat ini">
+                                @error('current_password')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            @else
+                            <div class="mb-6 bg-emerald-50 border border-emerald-100 rounded-lg p-4 text-sm text-emerald-900">
+                                Akun Google Anda belum memiliki kata sandi. Silakan buat kata sandi baru di bawah ini tanpa perlu mengisi kata sandi saat ini.
+                            </div>
+                            @endif
 
                             {{-- New Password --}}
                             <div class="mb-6">

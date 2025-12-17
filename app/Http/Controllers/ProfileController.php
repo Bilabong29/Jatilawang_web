@@ -98,29 +98,26 @@ class ProfileController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $needsSetup = $user->needsPasswordSetup();
+
+        $requiresCurrent = $user->google_id === null; // akun Google boleh set password tanpa current
 
         $rules = [
             'new_password' => 'required|min:8|confirmed',
         ];
 
-        if (! $needsSetup) {
+        if ($requiresCurrent) {
             $rules['current_password'] = 'required';
         }
 
         $validated = $request->validate($rules);
 
-        if (! $needsSetup && ! Hash::check($validated['current_password'], $user->password)) {
+        if ($requiresCurrent && !Hash::check($validated['current_password'], $user->password)) {
             return back()->withErrors(['current_password' => 'Password saat ini tidak valid.']);
         }
 
-        $user->forceFill([
-            'password' => Hash::make($validated['new_password']),
-            'must_set_password' => false,
-            'password_set_at' => now(),
-        ])->save();
-
-        $message = $needsSetup ? 'Password lokal berhasil dibuat! Silakan gunakan password ini untuk verifikasi selanjutnya.' : 'Password berhasil diubah!';
+        $user->update([
+            'password' => Hash::make($validated['new_password'])
+        ]);
 
         return redirect()->route('profile.edit')->with('success', $message);
     }
