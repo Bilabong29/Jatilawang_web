@@ -219,7 +219,7 @@ public function home()
             'counts' => $ratingCounts
         ];
 
-        return view('products.reviews', compact('product', 'reviews', 'stats'));
+        return view('products.review', compact('product', 'reviews', 'stats'));
     }
 
 }
