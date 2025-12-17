@@ -25,6 +25,22 @@
                 <p class="text-gray-600 mt-2">Bagikan pengalaman Anda menggunakan produk kami</p>
             </div>
 
+            @if($errors->has('error'))
+            <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {{ $errors->first('error') }}
+            </div>
+            @endif
+
+            @if($errors->any() && !$errors->has('error'))
+            <div class="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+                <ul class="list-disc ml-4 space-y-1">
+                    @foreach($errors->all() as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             {{-- Order Info --}}
             <div class="bg-gray-50 rounded-lg p-4 mb-6">
                 <h3 class="font-semibold text-gray-900 mb-2">Detail Pesanan</h3>
@@ -44,7 +60,7 @@
                 @if($type === 'rental')
                     @foreach($order->details as $detail)
                     <div class="border border-gray-200 rounded-lg p-4">
-                        <form action="{{ route('reviews.store', [$type, $order->{$type . '_id'}]) }}" method="POST">
+                        <form action="{{ route('reviews.store', ['type' => $type, 'id' => $order->{$type . '_id'}]) }}" method="POST">
                             @csrf
                             <input type="hidden" name="item_id" value="{{ $detail->item_id }}">
                             
@@ -100,7 +116,7 @@
                 @else
                     @foreach($order->detailBuys as $detail)
                     <div class="border border-gray-200 rounded-lg p-4">
-                        <form action="{{ route('reviews.store', [$type, $order->{$type . '_id'}]) }}" method="POST">
+                        <form action="{{ route('reviews.store', ['type' => $type, 'id' => $order->{$type . '_id'}]) }}" method="POST">
                             @csrf
                             <input type="hidden" name="item_id" value="{{ $detail->item_id }}">
                             

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ItemController extends Controller
 {
@@ -12,6 +13,13 @@ class ItemController extends Controller
     public function index(Request $request)
     {
         $query = Item::query();
+
+        // Ambil daftar kategori untuk filter dropdown
+        $categories = Item::select('category')
+            ->whereNotNull('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
 
         if ($search = $request->get('q')) {
             $query->where(function ($q) use ($search) {
@@ -50,21 +58,27 @@ class ItemController extends Controller
 
         $items = $query->paginate(20)->withQueryString();
 
-        return view('admin.items.index', compact('items'));
+        return view('admin.items.index', compact('items', 'categories'));
     }
 
     public function create()
     {
-        return view('admin.items.create');
+        $categories = Item::select('category')
+            ->whereNotNull('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+
+        return view('admin.items.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'item_id'             => ['required', 'integer', 'min:1', 'max:65535', 'unique:items,item_id'],
+        $validator = Validator::make($request->all(), [
             'item_name'           => ['required', 'string', 'max:100'],
             'description'         => ['nullable', 'string'],
-            'category'            => ['nullable', 'string', 'max:20'],
+            'category_selected'   => ['nullable', 'string', 'max:20'],
+            'new_category'        => ['nullable', 'string', 'max:20'],
             'url_image'           => ['nullable', 'url', 'max:255'],
             'rental_price_per_day'=> ['nullable', 'numeric', 'min:0'],
             'sale_price'          => ['nullable', 'numeric', 'min:0'],
@@ -75,20 +89,47 @@ class ItemController extends Controller
             'is_sellable'         => ['required', 'boolean'],
         ]);
 
-        $item = new Item();
-        $item->item_id              = $validated['item_id']; // primary key manual
-        $item->item_name            = $validated['item_name'];
-        $item->description          = $validated['description'] ?? null;
-        $item->category             = $validated['category'] ?? null;
-        $item->url_image            = $validated['url_image'] ?? null;
-        $item->rental_price_per_day = $validated['rental_price_per_day'] ?? null;
-        $item->sale_price           = $validated['sale_price'] ?? null;
-        $item->rental_stock         = $validated['rental_stock'] ?? 0;
-        $item->sale_stock           = $validated['sale_stock'] ?? 0;
-        $item->penalty_per_days     = $validated['penalty_per_days'] ?? 0;
-        $item->is_rentable          = $validated['is_rentable'];
-        $item->is_sellable          = $validated['is_sellable'];
-        $item->save();
+        $validator->after(function ($validator) use ($request) {
+            $rentable = $request->boolean('is_rentable');
+            $sellable = $request->boolean('is_sellable');
+
+            if ($rentable === $sellable) {
+                $validator->errors()->add('is_rentable', 'Pilih salah satu: hanya sewa atau hanya jual.');
+            }
+        });
+
+        $validated = $validator->validate();
+
+        $payload = $validated;
+        $payload['description'] = $payload['description'] ?? null;
+
+        $payload['category'] = $payload['new_category']
+            ?: $payload['category_selected']
+            ?: null;
+
+        $payload['url_image'] = $payload['url_image'] ?? null;
+
+        if ($payload['is_rentable']) {
+            $payload['rental_price_per_day'] = $payload['rental_price_per_day'] ?? null;
+            $payload['rental_stock'] = $payload['rental_stock'] ?? 0;
+            $payload['penalty_per_days'] = $payload['penalty_per_days'] ?? 0;
+        } else {
+            $payload['rental_price_per_day'] = null;
+            $payload['rental_stock'] = 0;
+            $payload['penalty_per_days'] = 0;
+        }
+
+        if ($payload['is_sellable']) {
+            $payload['sale_price'] = $payload['sale_price'] ?? null;
+            $payload['sale_stock'] = $payload['sale_stock'] ?? 0;
+        } else {
+            $payload['sale_price'] = null;
+            $payload['sale_stock'] = 0;
+        }
+
+        unset($payload['category_selected'], $payload['new_category']);
+
+        Item::create($payload);
 
         return redirect()
             ->route('admin.items.index')
@@ -97,15 +138,22 @@ class ItemController extends Controller
 
     public function edit(Item $item)
     {
-        return view('admin.items.edit', compact('item'));
+        $categories = Item::select('category')
+            ->whereNotNull('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category');
+
+        return view('admin.items.edit', compact('item', 'categories'));
     }
 
     public function update(Request $request, Item $item)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'item_name'           => ['required', 'string', 'max:100'],
             'description'         => ['nullable', 'string'],
-            'category'            => ['nullable', 'string', 'max:20'],
+            'category_selected'   => ['nullable', 'string', 'max:20'],
+            'new_category'        => ['nullable', 'string', 'max:20'],
             'url_image'           => ['nullable', 'url', 'max:255'],
             'rental_price_per_day'=> ['nullable', 'numeric', 'min:0'],
             'sale_price'          => ['nullable', 'numeric', 'min:0'],
@@ -116,14 +164,44 @@ class ItemController extends Controller
             'is_sellable'         => ['required', 'boolean'],
         ]);
 
-        $validated['rental_stock'] = $validated['rental_stock'] ?? 0;
-        $validated['sale_stock'] = $validated['sale_stock'] ?? 0;
-        $validated['penalty_per_days'] = $validated['penalty_per_days'] ?? 0;
+        $validator->after(function ($validator) use ($request) {
+            $rentable = $request->boolean('is_rentable');
+            $sellable = $request->boolean('is_sellable');
 
-        $validated['rental_price_per_day'] = $validated['rental_price_per_day'] ?? null;
-        $validated['sale_price'] = $validated['sale_price'] ?? null;
+            if ($rentable === $sellable) {
+                $validator->errors()->add('is_rentable', 'Pilih salah satu: hanya sewa atau hanya jual.');
+            }
+        });
 
-        $item->update($validated);
+        $validated = $validator->validate();
+
+        $payload = $validated;
+
+        $payload['category'] = $payload['new_category']
+            ?: $payload['category_selected']
+            ?: $item->category;
+
+        if ($payload['is_rentable']) {
+            $payload['rental_stock'] = $payload['rental_stock'] ?? 0;
+            $payload['penalty_per_days'] = $payload['penalty_per_days'] ?? 0;
+            $payload['rental_price_per_day'] = $payload['rental_price_per_day'] ?? null;
+        } else {
+            $payload['rental_stock'] = 0;
+            $payload['penalty_per_days'] = 0;
+            $payload['rental_price_per_day'] = null;
+        }
+
+        if ($payload['is_sellable']) {
+            $payload['sale_stock'] = $payload['sale_stock'] ?? 0;
+            $payload['sale_price'] = $payload['sale_price'] ?? null;
+        } else {
+            $payload['sale_stock'] = 0;
+            $payload['sale_price'] = null;
+        }
+
+        unset($payload['category_selected'], $payload['new_category']);
+
+        $item->update($payload);
 
         return redirect()
             ->route('admin.items.index')

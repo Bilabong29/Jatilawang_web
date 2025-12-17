@@ -5,6 +5,14 @@
 @php
     use Illuminate\Support\Str;
     use Illuminate\Support\Facades\Auth;
+    $homeMedia = [
+        'hero' => 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80',
+        'gear' => [
+            'tenda' => 'https://antarestar.com/wp-content/uploads/2021/01/Tenda-Camping-200-x-200-1.png',
+            'jaket' => 'https://antarestar.com/wp-content/uploads/2024/09/id-11134207-7rbk3-m6kp8kkk3bxm6a.jpeg',
+            'tas' => 'https://d1yutv2xslo29o.cloudfront.net/product/variant/media/web/910003194_RED_1_46e4.webp',
+        ],
+    ];
 @endphp
 
 @section('content')
@@ -16,7 +24,7 @@
 
         <div class="relative">
             <div class="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24">
-                <div class="grid items-center gap-12 md:gap-16 md:grid-cols-2">
+                <div class="grid items-center gap-10 md:gap-16 md:grid-cols-2">
                     <div class="text-white">
                         @auth
                             @if(Auth::user()->role === 'admin')
@@ -70,11 +78,11 @@
                             </a>
                         @endauth
                     </div>
-                    <div class="justify-self-center md:justify-self-end">
-                        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-black/10 bg-black/10">
-                            <img src="{{ asset('storage/hero/peaks.jpg') }}"
+                    <div class="justify-self-center md:justify-self-end w-full">
+                        <div class="rounded-2xl overflow-hidden shadow-xl ring-1 ring-black/10 bg-black/10 max-w-xl mx-auto">
+                               <img src="{{ $homeMedia['hero'] }}"
                                  alt="Pegunungan saat senja"
-                                 class="hero-float block w-[560px] h-[320px] md:w-[640px] md:h-[360px] object-cover"
+                                 class="hero-float block w-full h-64 sm:h-80 md:h-[360px] object-cover"
                                  loading="eager">
                         </div>
                     </div>
@@ -90,9 +98,9 @@
             <section class="mt-16 md:mt-24">
                 <div class="mx-auto max-w-7xl px-6">
                     <p class="text-sm text-emerald-700/70 mb-2">Koleksi Favorit Pendaki</p>
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <h2 class="text-3xl md:text-4xl font-extrabold text-jatilawang-900">Perlengkapan Andalan</h2>
-                        <div class="relative z-20 flex items-center gap-3">
+                        <div class="relative z-20 flex items-center gap-3 self-start md:self-auto">
                             <button class="gear-prev" aria-label="Sebelumnya">
                                 <svg viewBox="0 0 20 20" fill="none" class="w-5 h-5"><path d="M12 4L6 10l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                             </button>
@@ -109,14 +117,14 @@
                             {{-- SLIDE 1 --}}
                             <div class="swiper-slide">
                                 <div class="rounded-[28px] bg-emerald-50/70 ring-1 ring-emerald-100 p-6 md:p-10
-                                            grid md:grid-cols-2 gap-8 items-center min-h-[420px]">
+                                            grid gap-8 items-center min-h-[360px] md:min-h-[420px] md:grid-cols-2">
                                     <div class="flex justify-center">
-                                        <img src="{{ asset('storage/foto-produk/tenda-camping.png') }}"
+                                        <img src="{{ $homeMedia['gear']['tenda'] }}"
                                              alt="Tenda Camping"
                                              class="max-h-[300px] md:max-h-[360px] w-auto object-contain">
                                     </div>
                                     <div>
-                                        <h3 class="text-emerald-900 font-extrabold text-[42px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
+                                        <h3 class="text-emerald-900 font-extrabold text-[32px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
                                             Tenda <br class="hidden md:block"> Camping
                                         </h3>
                                         <p class="mt-3 text-emerald-900/70 text-lg">
@@ -138,14 +146,14 @@
                             {{-- SLIDE 2 --}}
                             <div class="swiper-slide">
                                 <div class="rounded-[28px] bg-emerald-50/70 ring-1 ring-emerald-100 p-6 md:p-10
-                                            grid md:grid-cols-2 gap-8 items-center min-h-[420px]">
+                                            grid gap-8 items-center min-h-[360px] md:min-h-[420px] md:grid-cols-2">
                                     <div class="flex justify-center order-last md:order-first">
-                                        <img src="{{ asset('storage/foto-produk/jaket-hitam.png') }}"
+                                        <img src="{{ $homeMedia['gear']['jaket'] }}"
                                              alt="Jaket Gunung"
                                              class="max-h-[300px] md:max-h-[360px] w-auto object-contain">
                                     </div>
                                     <div>
-                                        <h3 class="text-emerald-900 font-extrabold text-[42px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
+                                        <h3 class="text-emerald-900 font-extrabold text-[32px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
                                             Jaket Gunung
                                         </h3>
                                         <p class="mt-3 text-emerald-900/70 text-lg">
@@ -167,14 +175,14 @@
                             {{-- SLIDE 3 --}}
                             <div class="swiper-slide">
                                 <div class="rounded-[28px] bg-emerald-50/70 ring-1 ring-emerald-100 p-6 md:p-10
-                                            grid md:grid-cols-2 gap-8 items-center min-h-[420px]">
+                                            grid gap-8 items-center min-h-[360px] md:min-h-[420px] md:grid-cols-2">
                                     <div class="flex justify-center">
-                                        <img src="{{ asset('storage/foto-produk/carrier-eiger-streamline.png') }}"
+                                        <img src="{{ $homeMedia['gear']['tas'] }}"
                                              alt="Tas Gunung"
                                              class="max-h-[300px] md:max-h-[360px] w-auto object-contain">
                                     </div>
                                     <div>
-                                        <h3 class="text-emerald-900 font-extrabold text-[42px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
+                                        <h3 class="text-emerald-900 font-extrabold text-[32px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
                                             Tas Gunung
                                         </h3>
                                         <p class="mt-3 text-emerald-900/70 text-lg">
@@ -205,9 +213,9 @@
         <section class="mt-16 md:mt-24">
             <div class="mx-auto max-w-7xl px-6">
                 <p class="text-sm text-emerald-700/70 mb-2">Koleksi Favorit Pendaki</p>
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <h2 class="text-3xl md:text-4xl font-extrabold text-jatilawang-900">Perlengkapan Andalan</h2>
-                    <div class="relative z-20 flex items-center gap-3">
+                    <div class="relative z-20 flex items-center gap-3 self-start md:self-auto">
                         <button class="gear-prev" aria-label="Sebelumnya">
                             <svg viewBox="0 0 20 20" fill="none" class="w-5 h-5"><path d="M12 4L6 10l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
@@ -224,14 +232,14 @@
                         {{-- SLIDE 1 --}}
                         <div class="swiper-slide">
                             <div class="rounded-[28px] bg-emerald-50/70 ring-1 ring-emerald-100 p-6 md:p-10
-                                        grid md:grid-cols-2 gap-8 items-center min-h-[420px]">
+                                        grid gap-8 items-center min-h-[360px] md:min-h-[420px] md:grid-cols-2">
                                 <div class="flex justify-center">
-                                    <img src="{{ asset('storage/foto-produk/tenda-camping.png') }}"
+                                     <img src="{{ $homeMedia['gear']['tenda'] }}"
                                          alt="Tenda Camping"
                                          class="max-h-[300px] md:max-h-[360px] w-auto object-contain">
                                 </div>
                                 <div>
-                                    <h3 class="text-emerald-900 font-extrabold text-[42px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
+                                    <h3 class="text-emerald-900 font-extrabold text-[32px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
                                         Tenda <br class="hidden md:block"> Camping
                                     </h3>
                                     <p class="mt-3 text-emerald-900/70 text-lg">
@@ -253,14 +261,14 @@
                         {{-- SLIDE 2 --}}
                         <div class="swiper-slide">
                             <div class="rounded-[28px] bg-emerald-50/70 ring-1 ring-emerald-100 p-6 md:p-10
-                                        grid md:grid-cols-2 gap-8 items-center min-h-[420px]">
+                                        grid gap-8 items-center min-h-[360px] md:min-h-[420px] md:grid-cols-2">
                                 <div class="flex justify-center order-last md:order-first">
-                                    <img src="{{ asset('storage/foto-produk/jaket-hitam.png') }}"
+                                     <img src="{{ $homeMedia['gear']['jaket'] }}"
                                          alt="Jaket Gunung"
                                          class="max-h-[300px] md:max-h-[360px] w-auto object-contain">
                                 </div>
                                 <div>
-                                    <h3 class="text-emerald-900 font-extrabold text-[42px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
+                                    <h3 class="text-emerald-900 font-extrabold text-[32px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
                                         Jaket Gunung
                                     </h3>
                                     <p class="mt-3 text-emerald-900/70 text-lg">
@@ -282,14 +290,14 @@
                         {{-- SLIDE 3 --}}
                         <div class="swiper-slide">
                             <div class="rounded-[28px] bg-emerald-50/70 ring-1 ring-emerald-100 p-6 md:p-10
-                                        grid md:grid-cols-2 gap-8 items-center min-h-[420px]">
+                                        grid gap-8 items-center min-h-[360px] md:min-h-[420px] md:grid-cols-2">
                                 <div class="flex justify-center">
-                                    <img src="{{ asset('storage/foto-produk/carrier-eiger-streamline.png') }}"
+                                     <img src="{{ $homeMedia['gear']['tas'] }}"
                                          alt="Tas Gunung"
                                          class="max-h-[300px] md:max-h-[360px] w-auto object-contain">
                                 </div>
                                 <div>
-                                    <h3 class="text-emerald-900 font-extrabold text-[42px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
+                                    <h3 class="text-emerald-900 font-extrabold text-[32px] leading-[1.05] md:text-[58px] md:leading-[1.05]">
                                         Tas Gunung
                                     </h3>
                                     <p class="mt-3 text-emerald-900/70 text-lg">

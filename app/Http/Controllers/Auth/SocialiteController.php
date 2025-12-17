@@ -73,6 +73,8 @@ class SocialiteController extends Controller
             'username' => $this->generateUsername($email ?? $name ?? 'user'),
             'password' => Hash::make(Str::random(40)),
             'role' => 'customer',
+            'must_set_password' => true,
+            'password_set_at' => null,
         ]);
     }
 

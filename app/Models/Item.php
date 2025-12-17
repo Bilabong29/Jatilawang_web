@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Item extends Model
 {
     protected $primaryKey = 'item_id';
-    public $incrementing = false;
+    public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
@@ -60,5 +61,12 @@ class Item extends Model
     {
         return $this->belongsToMany(Buy::class, 'detail_orders', 'item_id', 'order_id')
             ->withPivot('quantity', 'total_price');
+    }
+
+    // Normalisasi kategori agar konsisten (hindari duplikasi karena kapitalisasi/whitespace)
+    public function setCategoryAttribute($value): void
+    {
+        $clean = is_string($value) ? trim($value) : $value;
+        $this->attributes['category'] = $clean ? Str::lower($clean) : null;
     }
 }
